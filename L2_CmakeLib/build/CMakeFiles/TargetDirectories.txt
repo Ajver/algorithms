@@ -1,0 +1,4 @@
+/media/dom/Wkspce/GitRepos/algorithms/L2_CmakeLib/build/CMakeFiles/hello_library.dir
+/media/dom/Wkspce/GitRepos/algorithms/L2_CmakeLib/build/CMakeFiles/hello_app.dir
+/media/dom/Wkspce/GitRepos/algorithms/L2_CmakeLib/build/CMakeFiles/edit_cache.dir
+/media/dom/Wkspce/GitRepos/algorithms/L2_CmakeLib/build/CMakeFiles/rebuild_cache.dir

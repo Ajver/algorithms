@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/hello_app.dir/src/main.c.o -o hello_app  lib/libhello_library.a
