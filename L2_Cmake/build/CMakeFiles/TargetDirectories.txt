@@ -1,0 +1,3 @@
+/media/dom/Wkspce/GitRepos/algorithms/L2_Cmake/build/CMakeFiles/hello_world.dir
+/media/dom/Wkspce/GitRepos/algorithms/L2_Cmake/build/CMakeFiles/edit_cache.dir
+/media/dom/Wkspce/GitRepos/algorithms/L2_Cmake/build/CMakeFiles/rebuild_cache.dir
