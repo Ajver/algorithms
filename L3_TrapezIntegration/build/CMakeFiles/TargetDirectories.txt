@@ -1,0 +1,4 @@
+/media/dom/Wkspce/GitRepos/algorithms/L3_TrapezIntegration/build/CMakeFiles/integration_lib.dir
+/media/dom/Wkspce/GitRepos/algorithms/L3_TrapezIntegration/build/CMakeFiles/app.dir
+/media/dom/Wkspce/GitRepos/algorithms/L3_TrapezIntegration/build/CMakeFiles/edit_cache.dir
+/media/dom/Wkspce/GitRepos/algorithms/L3_TrapezIntegration/build/CMakeFiles/rebuild_cache.dir
