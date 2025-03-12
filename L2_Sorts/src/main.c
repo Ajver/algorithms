@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -9,6 +10,16 @@ void print_tab(int* tab, int len) {
 		printf("%d ", tab[i]);
 	}
 	printf("\n");
+}
+
+bool is_sorted(int* tab, int len) {
+	for (int i = 0; i < len - 1; i++) {
+		if (tab[i] > tab[i + 1]) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 int main() {
@@ -56,6 +67,8 @@ int main() {
 
 	printf("Tablica po sortowaniu: ");
 	print_tab(tab, len);
+
+	printf("Posortowana: %s\n", is_sorted(tab, len) ? "TAK" : "NIE");
 
 	free(tab);
 

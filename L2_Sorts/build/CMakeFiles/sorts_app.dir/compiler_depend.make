@@ -56,6 +56,7 @@ CMakeFiles/sorts_app.dir/src/main.c.o: /media/dom/Wkspce/GitRepos/algorithms/L2_
   /usr/include/sys/select.h \
   /usr/include/sys/types.h \
   /usr/lib/gcc/x86_64-redhat-linux/14/include/stdarg.h \
+  /usr/lib/gcc/x86_64-redhat-linux/14/include/stdbool.h \
   /usr/lib/gcc/x86_64-redhat-linux/14/include/stddef.h
 
 
@@ -166,6 +167,8 @@ CMakeFiles/sorts_app.dir/src/main.c.o: /media/dom/Wkspce/GitRepos/algorithms/L2_
 /usr/include/bits/timesize.h:
 
 /usr/include/bits/types.h:
+
+/usr/lib/gcc/x86_64-redhat-linux/14/include/stdbool.h:
 
 /usr/include/bits/types/FILE.h:
 

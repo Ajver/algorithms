@@ -61,31 +61,49 @@ CMakeFiles/sort_library.dir/src/insertion_sort.c.o: /media/dom/Wkspce/GitRepos/a
 
 CMakeFiles/sort_library.dir/src/merge_sort.c.o: /media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/src/merge_sort.c \
   /media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/src/sort.h \
+  /usr/include/alloca.h \
+  /usr/include/bits/atomic_wide_counter.h \
+  /usr/include/bits/byteswap.h \
+  /usr/include/bits/endian.h \
+  /usr/include/bits/endianness.h \
   /usr/include/bits/floatn-common.h \
   /usr/include/bits/floatn.h \
   /usr/include/bits/libc-header-start.h \
   /usr/include/bits/long-double.h \
-  /usr/include/bits/stdio_lim.h \
+  /usr/include/bits/pthreadtypes-arch.h \
+  /usr/include/bits/pthreadtypes.h \
+  /usr/include/bits/select.h \
+  /usr/include/bits/stdint-intn.h \
+  /usr/include/bits/stdlib-float.h \
+  /usr/include/bits/struct_mutex.h \
+  /usr/include/bits/struct_rwlock.h \
+  /usr/include/bits/thread-shared-types.h \
   /usr/include/bits/time64.h \
   /usr/include/bits/timesize.h \
   /usr/include/bits/types.h \
-  /usr/include/bits/types/FILE.h \
-  /usr/include/bits/types/__FILE.h \
-  /usr/include/bits/types/__fpos64_t.h \
-  /usr/include/bits/types/__fpos_t.h \
-  /usr/include/bits/types/__mbstate_t.h \
-  /usr/include/bits/types/cookie_io_functions_t.h \
-  /usr/include/bits/types/struct_FILE.h \
+  /usr/include/bits/types/__sigset_t.h \
+  /usr/include/bits/types/clock_t.h \
+  /usr/include/bits/types/clockid_t.h \
+  /usr/include/bits/types/sigset_t.h \
+  /usr/include/bits/types/struct_timespec.h \
+  /usr/include/bits/types/struct_timeval.h \
+  /usr/include/bits/types/time_t.h \
+  /usr/include/bits/types/timer_t.h \
   /usr/include/bits/typesizes.h \
+  /usr/include/bits/uintn-identity.h \
+  /usr/include/bits/waitflags.h \
+  /usr/include/bits/waitstatus.h \
   /usr/include/bits/wordsize.h \
+  /usr/include/endian.h \
   /usr/include/features-time64.h \
   /usr/include/features.h \
   /usr/include/gnu/stubs-64.h \
   /usr/include/gnu/stubs.h \
   /usr/include/stdc-predef.h \
-  /usr/include/stdio.h \
+  /usr/include/stdlib.h \
   /usr/include/sys/cdefs.h \
-  /usr/lib/gcc/x86_64-redhat-linux/14/include/stdarg.h \
+  /usr/include/sys/select.h \
+  /usr/include/sys/types.h \
   /usr/lib/gcc/x86_64-redhat-linux/14/include/stddef.h
 
 CMakeFiles/sort_library.dir/src/quick_sort.c.o: /media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/src/quick_sort.c \
@@ -120,6 +138,44 @@ CMakeFiles/sort_library.dir/src/quick_sort.c.o: /media/dom/Wkspce/GitRepos/algor
 
 /media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/src/quick_sort.c:
 
+/usr/include/sys/types.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/types/timer_t.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/bits/types/time_t.h:
+
+/usr/include/bits/types/struct_timeval.h:
+
+/usr/include/bits/types/struct_timespec.h:
+
+/usr/include/bits/types/clockid_t.h:
+
+/usr/include/bits/types/clock_t.h:
+
+/usr/include/bits/thread-shared-types.h:
+
+/usr/include/bits/types/sigset_t.h:
+
+/usr/include/bits/stdlib-float.h:
+
+/usr/include/bits/stdint-intn.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/bits/pthreadtypes-arch.h:
+
+/usr/include/bits/endianness.h:
+
+/usr/include/bits/atomic_wide_counter.h:
+
+/usr/include/alloca.h:
+
 /media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/src/merge_sort.c:
 
 /usr/include/bits/types.h:
@@ -129,6 +185,8 @@ CMakeFiles/sort_library.dir/src/quick_sort.c.o: /media/dom/Wkspce/GitRepos/algor
 /usr/include/bits/types/FILE.h:
 
 /media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/src/bubble_sort.c:
+
+/usr/include/bits/byteswap.h:
 
 /usr/include/bits/time64.h:
 
@@ -144,6 +202,8 @@ CMakeFiles/sort_library.dir/src/quick_sort.c.o: /media/dom/Wkspce/GitRepos/algor
 
 /usr/include/bits/floatn-common.h:
 
+/usr/include/bits/struct_mutex.h:
+
 /usr/include/gnu/stubs-64.h:
 
 /media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/src/sort.h:
@@ -152,13 +212,19 @@ CMakeFiles/sort_library.dir/src/quick_sort.c.o: /media/dom/Wkspce/GitRepos/algor
 
 /usr/include/bits/types/cookie_io_functions_t.h:
 
+/usr/include/sys/select.h:
+
 /usr/include/bits/types/struct_FILE.h:
 
 /usr/include/features.h:
 
+/usr/include/bits/uintn-identity.h:
+
 /usr/include/bits/wordsize.h:
 
 /usr/include/bits/types/__fpos_t.h:
+
+/usr/include/bits/select.h:
 
 /usr/include/bits/types/__fpos64_t.h:
 
@@ -168,6 +234,8 @@ CMakeFiles/sort_library.dir/src/quick_sort.c.o: /media/dom/Wkspce/GitRepos/algor
 
 /usr/include/stdio.h:
 
+/usr/include/bits/struct_rwlock.h:
+
 /usr/lib/gcc/x86_64-redhat-linux/14/include/stddef.h:
 
 /usr/include/bits/timesize.h:
@@ -175,6 +243,12 @@ CMakeFiles/sort_library.dir/src/quick_sort.c.o: /media/dom/Wkspce/GitRepos/algor
 /usr/include/stdc-predef.h:
 
 /usr/include/sys/cdefs.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/bits/types/__sigset_t.h:
+
+/usr/include/bits/endian.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/14/include/stdarg.h:
 
