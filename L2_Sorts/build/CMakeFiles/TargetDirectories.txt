@@ -1,0 +1,4 @@
+/media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/build/CMakeFiles/sort_library.dir
+/media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/build/CMakeFiles/sorts_app.dir
+/media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/build/CMakeFiles/edit_cache.dir
+/media/dom/Wkspce/GitRepos/algorithms/L2_Sorts/build/CMakeFiles/rebuild_cache.dir

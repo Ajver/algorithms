@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/sorts_app.dir/src/main.c.o -o sorts_app  lib/libsort_library.a

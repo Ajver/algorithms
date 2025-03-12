@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib/libsort_library.a CMakeFiles/sort_library.dir/src/bubble_sort.c.o CMakeFiles/sort_library.dir/src/insertion_sort.c.o CMakeFiles/sort_library.dir/src/quick_sort.c.o CMakeFiles/sort_library.dir/src/merge_sort.c.o
+/usr/bin/ranlib lib/libsort_library.a
