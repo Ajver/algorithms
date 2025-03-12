@@ -1,2 +1,2 @@
 # algorithms
-Repo with different algorithms
+Repo with various algorithms
