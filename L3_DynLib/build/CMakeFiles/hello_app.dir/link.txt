@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/hello_app.dir/src/main.c.o -o hello_app  -Wl,-rpath,/media/dom/Wkspce/GitRepos/algorithms/L3_DynLib/build libhello_library.so

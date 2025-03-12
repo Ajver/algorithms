@@ -1,0 +1,4 @@
+/media/dom/Wkspce/GitRepos/algorithms/L3_DynLib/build/CMakeFiles/hello_library.dir
+/media/dom/Wkspce/GitRepos/algorithms/L3_DynLib/build/CMakeFiles/hello_app.dir
+/media/dom/Wkspce/GitRepos/algorithms/L3_DynLib/build/CMakeFiles/edit_cache.dir
+/media/dom/Wkspce/GitRepos/algorithms/L3_DynLib/build/CMakeFiles/rebuild_cache.dir
