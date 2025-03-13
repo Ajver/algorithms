@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib/libgame_of_life_library.a CMakeFiles/game_of_life_library.dir/src/game_of_life.c.o
+/usr/bin/ranlib lib/libgame_of_life_library.a
