@@ -29,6 +29,11 @@ int main() {
 	printf("Podaj rozmiar tablicy: ");
 	scanf("%d", &len);
 
+	if (len <= 0) {
+		printf("Niepoprawny rozmiar tablicy!");
+		return 1;
+	}
+
 	printf("Podaj %d elementów tablicy:\n", len);
 	tab = malloc(len * sizeof(int));
 	for (int i = 0; i < len; i++) {
@@ -56,19 +61,21 @@ int main() {
 			insertion_sort(tab, len);
 			break;
 		case 3:
-			quick_sort(tab, 0, len);
+			quick_sort(tab, 0, len-1);
 			break;
 		case 4:
-			merge_sort(tab, 0, len);
+			merge_sort(tab, 0, len-1);
 			break;
 		default:
-			printf("Niepoprawny wybór: %d", choice);
+			printf("Niepoprawny wybór.");
+			free(tab);
+			return 1;
 	}
 
 	printf("Tablica po sortowaniu: ");
 	print_tab(tab, len);
 
-	printf("Posortowana: %s\n", is_sorted(tab, len) ? "TAK" : "NIE");
+//	printf("Posortowana: %s\n", is_sorted(tab, len) ? "TAK" : "NIE");
 
 	free(tab);
 
