@@ -1,0 +1,3 @@
+/home/dominik/GitRepos/algorithms/L4_Dijsktra/build/CMakeFiles/app.dir
+/home/dominik/GitRepos/algorithms/L4_Dijsktra/build/CMakeFiles/edit_cache.dir
+/home/dominik/GitRepos/algorithms/L4_Dijsktra/build/CMakeFiles/rebuild_cache.dir
