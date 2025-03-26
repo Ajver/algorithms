@@ -3,9 +3,13 @@
 #include <stdbool.h>
 
 
+#define INFINITY 999999999
+
 /*
 
 5 0 10 0 30 0 10 0 50 0 0 0 50 0 0 20 30 0 0 0 60 0 0 20 60 0 0
+
+6 0 2 4 0 0 0 0 0 1 7 0 0 0 0 0 0 3 0 0 0 0 0 0 1 0 0 0 2 0 5 0 0 0 0 0 0 0
 
 */
 
@@ -15,31 +19,67 @@ int* dijkstra(int startingNode, int nodesCount, int** graph) {
     bool* visitedNodes = malloc(nodesCount * sizeof(bool));
 
     for (int i=0; i<nodesCount; i++) {
-        // -1 is "INFINITE" (not yet calculated) value
-        dFromSource[i] = -1;
+        dFromSource[i] = INFINITY;
         visitedNodes[i] = false;
     }
     dFromSource[startingNode] = 0;
     visitedNodes[startingNode] = true;
 
-    for (int i=0; i<nodesCount; i++) {
-        int cost = graph[startingNode][i];
-        if (cost <= 0) {
-            // No connection to this node from the currentNode
-            continue;
-        }
+	for (int c=0; c<nodesCount; c++) {
+	    for (int i=0; i<nodesCount; i++) {
+	        int cost = graph[i][startingNode];
+	        if (cost <= 0) {
+	            // No connection to this node from the currentNode
+	            continue;
+	        }
 
-        dFromSource[i] = cost;
-    }
+			int newCost = dFromSource[startingNode] + cost;
+			if (dFromSource[i] > newCost) {
+				dFromSource[i] = newCost;
+			}
+	    }
 
-    int smallestCost = -1;
-    for (int i=0; i<nodesCount; i++) {
-        if (visitedNodes[i]) {
-            // Already visited
-            continue;
-        }
-        // if (smallestCost == -1 || dFromSource[i] < )
-    }
+	    int smallestCost = -1;
+	    int nextNodeIdx = -1;
+	    for (int i=0; i<nodesCount; i++) {
+	        if (visitedNodes[i]) {
+	            // Already visited
+	            continue;
+	        }
+
+			if (graph[startingNode][i] <= 0) {
+				// Can't go there from startingNode
+				continue;
+			}
+
+			if (smallestCost == -1 || dFromSource[i] < smallestCost) {
+				smallestCost = dFromSource[i];
+				nextNodeIdx = i;
+			}
+	    }
+
+		if (nextNodeIdx == -1) {
+			// No exits from the current source
+
+			smallestCost = -1;
+			for (int i=0; i<nodesCount; i++) {
+				if (!visitedNodes[i]) {
+					if (smallestCost == -1 || dFromSource[i] < smallestCost) {
+						smallestCost = dFromSource[i];
+						nextNodeIdx = i;
+					}
+				}
+			}
+
+			if (nextNodeIdx == -1) {
+//				printf("No solution exists.\n");
+				return dFromSource;
+			}
+		}
+
+		startingNode = nextNodeIdx;
+		visitedNodes[nextNodeIdx] = true;
+	}
 
     free(visitedNodes);
     return dFromSource;
@@ -61,7 +101,7 @@ int main() {
     int** graph;
     int startingNode;
 
-    printf("Podaj liczbe wierzcholkow w grafie: ");
+    printf("Podaj liczbe wierzcholkow w grafie: \n");
     scanf("%d", &nodesCount);
 
     printf("Podaj macierz sasiedztwa (wagi krawedzi, 0 oznacza brak krawedzi):\n");
@@ -77,14 +117,14 @@ int main() {
         }
     }
 
-    printGraph(nodesCount, graph);
+//    printGraph(nodesCount, graph);
 
-    printf("Podaj wierzcholek poczatkowy: ");
+    printf("Podaj wierzcholek poczatkowy: \n");
     scanf("%d", &startingNode);
 
     int* dFromSource = dijkstra(startingNode, nodesCount, graph);
 
-    printf("Wierzchołek\tOdległość od startu\n");
+    printf("Wierzchołek\tOdległość od źródła\n");
     for (int i=0; i<nodesCount; i++) {
         printf("%d\t\t%d\n", i, dFromSource[i]);
     }
