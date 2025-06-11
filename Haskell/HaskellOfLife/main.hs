@@ -29,7 +29,7 @@ showWorld (w:rest) = do
 
 -- mechanics of the game
 countIfAlive :: Char -> Int
-countIfAlive state = if state == '#' then 1 else 0
+countIfAlive state = if state == 'X' then 1 else 0
 
 countNeighbourForCellInOneRow :: String -> Int -> Int
 countNeighbourForCellInOneRow row idx
@@ -54,9 +54,9 @@ countNeighbours world = [countRowAndSurrounding world idx | idx <- [1 .. height]
 
 al :: Char -> Int -> Char
 al state count
-    | state == '#' && (count < 2) = '.'
-    | state == '#' && (count > 3) = '.'
-    | state == '.' && (count == 3) = '#'
+    | state == 'X' && (count < 2) = '.'
+    | state == 'X' && (count > 3) = '.'
+    | state == '.' && (count == 3) = 'X'
     | otherwise = state
 
 applyLogic :: (Char, Int) -> Char
