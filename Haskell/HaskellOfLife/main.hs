@@ -1,4 +1,11 @@
 
+showWorld :: [String] -> IO ()
+showWorld [] = putStrLn ""
+showWorld [a] = putStrLn a
+showWorld (w:rest) = do 
+    putStrLn w  
+    showWorld rest
+
 
 main :: IO ()
 main = do
@@ -10,4 +17,4 @@ main = do
     input <- getLine
     let height = read input :: Int
 
-    putStrLn $ "World dimensions: " ++ (show width) ++ " x " ++ (show height)
+    putStrLn $ "World dimensions: " ++ show width ++ " x " ++ show height
