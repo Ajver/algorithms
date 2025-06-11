@@ -1,3 +1,8 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use camelCase" #-}
+import System.IO
+import Control.Monad
+
 width = 5
 height = 5
 
@@ -83,12 +88,15 @@ logic world counts = [applyLogicForRow (getElement world idx) (getElement counts
 main :: IO ()
 main = do
     let epoch = 10
+
+    handle <- openFile "test.txt" ReadMode
+    input <- hGetContents handle
+    let lines = words input
+    let world = lines
+    
     putStrLn $ "World dimensions: " ++ (show width) ++ " x " ++ (show height)
-
-    let world = [".....", ".....", ".###.", ".....", "....."]
-    let world2 = ["..#..", ".#.#.", "..#..", "##.##", ".#.#."]
+    live_Cycyle world epoch
     
-    live_Cycyle world2 epoch
+    hClose handle
 
-    
 
