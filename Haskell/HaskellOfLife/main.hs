@@ -34,7 +34,7 @@ countIfAlive state = if state == 'X' then 1 else 0
 countNeighbourForCellInOneRow :: String -> Int -> Int
 countNeighbourForCellInOneRow row idx
     | idx == 1 = (countIfAlive $ getElement row 2)
-    | idx == width = (countIfAlive $ getElement row 4)
+    | idx == width = (countIfAlive $ getElement row (width-1))
     | otherwise = (countIfAlive $ getElement row (idx - 1)) + (countIfAlive $ getElement row (idx + 1))
 
 countNeigboursInRow :: String -> [Int]
@@ -46,7 +46,7 @@ countNeighboursInRowIncludingThemselves row = [countNeighbourForCellInOneRow row
 countRowAndSurrounding :: [String] -> Int -> [Int]
 countRowAndSurrounding world rowIdx
     | rowIdx == 1 = add2Lists (countNeigboursInRow $ getElement world 1) (countNeighboursInRowIncludingThemselves $ getElement world 2)
-    | rowIdx == height = add2Lists (countNeighboursInRowIncludingThemselves $ getElement world 4) (countNeigboursInRow $ getElement world height)
+    | rowIdx == height = add2Lists (countNeighboursInRowIncludingThemselves $ getElement world (height-1)) (countNeigboursInRow $ getElement world height)
     | otherwise = add3Lists (countNeighboursInRowIncludingThemselves $ getElement world (rowIdx-1)) (countNeigboursInRow $ getElement world rowIdx) (countNeighboursInRowIncludingThemselves $ getElement world (rowIdx+1))
 
 countNeighbours :: [String] -> [[Int]]
@@ -89,12 +89,16 @@ main :: IO ()
 main = do
     let epoch = 10
 
-    handle <- openFile "worlds/map_1.txt" ReadMode
+    handle <- openFile "worlds/debug_map_6_glider.txt" ReadMode
     input <- hGetContents handle
     let lines = words input
     let world = lines
     
     putStrLn $ "World dimensions: " ++ (show width) ++ " x " ++ (show height)
+    let count = countNeighbours world
+    showWorld world
+    putStrLn $ show count
+    
     live_Cycyle world epoch
     
     hClose handle
