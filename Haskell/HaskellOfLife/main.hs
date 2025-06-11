@@ -2,12 +2,15 @@
 
 main :: IO ()
 main = do
-    putStrLn "Set World width: "
-    input <- getLine
-    let width = read input :: Int
-
-    putStrLn "Set World height: "
-    input <- getLine
-    let height = read input :: Int
+    let width = 5
+    let height = 5
 
     putStrLn $ "World dimensions: " ++ (show width) ++ " x " ++ (show height)
+
+    let world = [".####", "#.###", "##.##", "###.#", "####."]
+
+    putStrLn $ head world
+
+    
+    putStrLn "END!"
+
