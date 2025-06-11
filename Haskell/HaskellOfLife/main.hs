@@ -24,7 +24,7 @@ showWorld (w:rest) = do
 
 -- mechanics of the game
 countIfAlive :: Char -> Int
-countIfAlive state = if state == '#' then 1 else 0
+countIfAlive state = if state == 'X' then 1 else 0
 
 countNeighbourForCellInOneRow :: String -> Int -> Int
 countNeighbourForCellInOneRow row idx
@@ -49,9 +49,9 @@ countNeighbours world = [countRowAndSurrounding world idx | idx <- [1 .. height]
 
 al :: Char -> Int -> Char
 al state count
-    | state == '#' && (count < 2) = '.'
-    | state == '#' && (count > 3) = '.'
-    | state == '.' && (count == 3) = '#'
+    | state == 'X' && (count < 2) = '.'
+    | state == 'X' && (count > 3) = '.'
+    | state == '.' && (count == 3) = 'X'
     | otherwise = state
 
 applyLogic :: (Char, Int) -> Char
@@ -85,8 +85,8 @@ main = do
     let epoch = 10
     putStrLn $ "World dimensions: " ++ (show width) ++ " x " ++ (show height)
 
-    let world = [".....", ".....", ".###.", ".....", "....."]
-    let world2 = ["..#..", ".#.#.", "..#..", "##.##", ".#.#."]
+    let world = [".....", ".....", ".XXX.", ".....", "....."]
+    let world2 = ["..X..", ".X.X.", "..X..", "XX.XX", ".X.X."]
     
     live_Cycyle world2 epoch
 
