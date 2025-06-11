@@ -3,8 +3,8 @@
 import System.IO
 import Control.Monad
 
-width = 5
-height = 5
+width = 10
+height = 10
 
 -- helper func 
 getElement :: (Ord a) => [a] -> Int -> a
@@ -89,7 +89,7 @@ main :: IO ()
 main = do
     let epoch = 10
 
-    handle <- openFile "test.txt" ReadMode
+    handle <- openFile "worlds/map_1.txt" ReadMode
     input <- hGetContents handle
     let lines = words input
     let world = lines
