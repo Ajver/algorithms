@@ -57,8 +57,21 @@ applyLogic tuple = al (fst tuple) (snd tuple)
 applyLogicForRow :: String -> [Int] -> String
 applyLogicForRow r c = map (applyLogic) (zip r c)
 
+performeEvolutionStep :: [String] -> [String]
+performeEvolutionStep world =
+    let count = countNeighbours world
+    in logic world count
 
+live_Cycyle :: [String] -> Int -> IO ()
+live_Cycyle _ 0 = putStrLn "END!"
+live_Cycyle world n = do
+    let newWorld = performeEvolutionStep world
 
+    showWorld world
+    putStrLn ""
+    live_Cycyle newWorld (n-1)
+
+    
 
 
 logic :: [String] -> [[Int]] -> [String]
@@ -68,16 +81,13 @@ main :: IO ()
 main = do
     let width = 5
     let height = 5
-
+    let epoch = 10
     putStrLn $ "World dimensions: " ++ (show width) ++ " x " ++ (show height)
 
-    let world = ["#####", "#.###", "##.##", "###.#", "#####"]
+    let world = [".....", ".....", ".###.", ".....", "....."]
 
-    showWorld world
-    let counts = countNeighbours world
+    
+    live_Cycyle world epoch
 
-    showWorld $ logic world counts
-
-    putStrLn $ show counts
-    putStrLn "END!"
+    
 
