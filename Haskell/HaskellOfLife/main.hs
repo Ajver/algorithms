@@ -1,4 +1,5 @@
 width = 5
+height = 5
 
 -- helper func 
 getElement :: (Ord a) => [a] -> Int -> a
@@ -40,11 +41,11 @@ countNeighboursInRowIncludingThemselves row = [countNeighbourForCellInOneRow row
 countRowAndSurrounding :: [String] -> Int -> [Int]
 countRowAndSurrounding world rowIdx
     | rowIdx == 1 = add2Lists (countNeigboursInRow $ getElement world 1) (countNeighboursInRowIncludingThemselves $ getElement world 2)
-    | rowIdx == width = add2Lists (countNeighboursInRowIncludingThemselves $ getElement world 4) (countNeigboursInRow $ getElement world width)
+    | rowIdx == height = add2Lists (countNeighboursInRowIncludingThemselves $ getElement world 4) (countNeigboursInRow $ getElement world height)
     | otherwise = add3Lists (countNeighboursInRowIncludingThemselves $ getElement world (rowIdx-1)) (countNeigboursInRow $ getElement world rowIdx) (countNeighboursInRowIncludingThemselves $ getElement world (rowIdx+1))
 
 countNeighbours :: [String] -> [[Int]]
-countNeighbours world = [countRowAndSurrounding world idx | idx <- [1..width]]
+countNeighbours world = [countRowAndSurrounding world idx | idx <- [1 .. height]]
 
 al :: Char -> Int -> Char
 al state count
@@ -77,11 +78,10 @@ live_Cycyle world n = do
 
 
 logic :: [String] -> [[Int]] -> [String]
-logic world counts = [applyLogicForRow (getElement world idx) (getElement counts idx) | idx <- [1..width]]
+logic world counts = [applyLogicForRow (getElement world idx) (getElement counts idx) | idx <- [1 .. height]]
 
 main :: IO ()
 main = do
-    let height = 5
     let epoch = 10
     putStrLn $ "World dimensions: " ++ (show width) ++ " x " ++ (show height)
 
