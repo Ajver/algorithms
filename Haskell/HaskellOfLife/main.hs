@@ -1,13 +1,6 @@
-
+-- helper func 
 getElement :: (Ord a) => [a] -> Int -> a
 getElement elements idx = head (drop (idx-1) elements)
-
-showWorld :: [String] -> IO ()
-showWorld [] = putStrLn ""
-showWorld [a] = putStrLn a
-showWorld (w:rest) = do 
-    putStrLn w  
-    showWorld rest
 
 add2Lists :: [Int] -> [Int] -> [Int]
 add2Lists ta tb = [(fst x + snd x) | x <- (zip ta tb)] 
@@ -15,6 +8,18 @@ add2Lists ta tb = [(fst x + snd x) | x <- (zip ta tb)]
 add3Lists :: [Int] -> [Int] -> [Int] -> [Int]
 add3Lists a b c = add2Lists a $ add2Lists b c
 
+-- world func
+showWorld :: [String] -> IO ()
+showWorld [] = putStrLn ""
+showWorld [a] = putStrLn a
+showWorld (w:rest) = do 
+    putStrLn w  
+    showWorld rest
+
+-- TODO: implement getting world
+
+
+-- mechanics of the game
 countIfAlive :: Char -> Int
 countIfAlive '#' = 1
 countIfAlive _ = 0
@@ -39,6 +44,25 @@ countNeighbours world =
         last = add2Lists (countWholeRowIncludingThemself $ getElement world 4) (countWholeRow $ getElement world 5)
     in [first] ++ middle ++ [last]
 
+al :: Char -> Int -> Char
+al state count
+    | state == '#' && (count < 2) = '.'
+    | state == '#' && (count > 3) = '.'
+    | state == '.' && (count == 3) = '#'
+    | otherwise = state
+
+applyLogic :: (Char, Int) -> Char
+applyLogic tuple = al (fst tuple) (snd tuple)
+
+applyLogicForRow :: String -> [Int] -> String
+applyLogicForRow r c = map (applyLogic) (zip r c)
+
+
+
+
+
+logic :: [String] -> [[Int]] -> [String]
+logic world counts = [applyLogicForRow (getElement world idx) (getElement counts idx) | idx <- [1..5]]
 
 main :: IO ()
 main = do
@@ -50,7 +74,10 @@ main = do
     let world = ["#####", "#.###", "##.##", "###.#", "#####"]
 
     showWorld world
-    let foo = countNeighbours world
-    putStrLn $ show foo
+    let counts = countNeighbours world
+
+    showWorld $ logic world counts
+
+    putStrLn $ show counts
     putStrLn "END!"
 
