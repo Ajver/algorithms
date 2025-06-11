@@ -23,21 +23,21 @@ showWorld (w:rest) = do
 countIfAlive :: Char -> Int
 countIfAlive state = if state == '#' then 1 else 0
 
-countInRow :: String -> String -> Int
-countInRow [] right = (countIfAlive $ head right)
-countInRow left [] = (countIfAlive $ last left)
-countInRow left right = (countIfAlive $ last left) + (countIfAlive $ head right)
+countNeighbourForCellInOneRow :: String -> Int -> Int
+countNeighbourForCellInOneRow row 1 = (countIfAlive $ getElement row 2)
+countNeighbourForCellInOneRow row 5 = (countIfAlive $ getElement row 4)
+countNeighbourForCellInOneRow row idx = (countIfAlive $ getElement row (idx - 1)) + (countIfAlive $ getElement row (idx + 1))
 
-countWholeRow :: String -> [Int]
-countWholeRow row = [(countInRow (take (x-1) row) (drop x row)) | x <- [1..5]]
+countNeigboursInRow :: String -> [Int]
+countNeigboursInRow row = [countNeighbourForCellInOneRow row x | x <- [1 .. 5]]
 
-countWholeRowIncludingThemself :: String -> [Int]
-countWholeRowIncludingThemself row = [(countInRow (take (x-1) row) (drop x row)) + (countIfAlive (getElement row x)) | x <- [1..5]]
+countNeighboursInRowIncludingThemselves :: String -> [Int]
+countNeighboursInRowIncludingThemselves row = [countNeighbourForCellInOneRow row x + (countIfAlive (getElement row x)) | x <- [1..5]]
 
 countRowAndSurrounding :: [String] -> Int -> [Int]
-countRowAndSurrounding world 0 = add2Lists (countWholeRow $ getElement world 1) (countWholeRowIncludingThemself $ getElement world 2)
-countRowAndSurrounding world 5 = add2Lists (countWholeRowIncludingThemself $ getElement world 4) (countWholeRow $ getElement world 5)
-countRowAndSurrounding world rowIdx = add3Lists (countWholeRowIncludingThemself $ getElement world (rowIdx-1)) (countWholeRow $ getElement world rowIdx) (countWholeRowIncludingThemself $ getElement world (rowIdx+1))
+countRowAndSurrounding world 0 = add2Lists (countNeigboursInRow $ getElement world 1) (countNeighboursInRowIncludingThemselves $ getElement world 2)
+countRowAndSurrounding world 5 = add2Lists (countNeighboursInRowIncludingThemselves $ getElement world 4) (countNeigboursInRow $ getElement world 5)
+countRowAndSurrounding world rowIdx = add3Lists (countNeighboursInRowIncludingThemselves $ getElement world (rowIdx-1)) (countNeigboursInRow $ getElement world rowIdx) (countNeighboursInRowIncludingThemselves $ getElement world (rowIdx+1))
 
 countNeighbours :: [String] -> [[Int]]
 countNeighbours world = [countRowAndSurrounding world idx | idx <- [1..5]]
