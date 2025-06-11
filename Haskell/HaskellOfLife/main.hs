@@ -21,8 +21,7 @@ showWorld (w:rest) = do
 
 -- mechanics of the game
 countIfAlive :: Char -> Int
-countIfAlive '#' = 1
-countIfAlive _ = 0
+countIfAlive state = if state == '#' then 1 else 0
 
 countInRow :: String -> String -> Int
 countInRow [] right = (countIfAlive $ head right)
