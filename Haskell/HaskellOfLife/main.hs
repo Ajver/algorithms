@@ -16,8 +16,7 @@ main = do
 
     let world = [".####", "#.###", "##.##", "###.#", "####."]
 
-    putStrLn $ head world
-
+    showWorld world
     
     putStrLn "END!"
 
