@@ -1,4 +1,11 @@
 
+showWorld :: [String] -> IO ()
+showWorld [] = putStrLn ""
+showWorld [a] = putStrLn a
+showWorld (w:rest) = do 
+    putStrLn w  
+    showWorld rest
+
 
 main :: IO ()
 main = do
