@@ -29,19 +29,18 @@ countInRow left [] = (countIfAlive $ last left)
 countInRow left right = (countIfAlive $ last left) + (countIfAlive $ head right)
 
 countWholeRow :: String -> [Int]
-countWholeRow [] = [0, 0, 0, 0, 0]
 countWholeRow row = [(countInRow (take (x-1) row) (drop x row)) | x <- [1..5]]
 
 countWholeRowIncludingThemself :: String -> [Int]
-countWholeRowIncludingThemself [] = [0, 0, 0, 0, 0]
 countWholeRowIncludingThemself row = [(countInRow (take (x-1) row) (drop x row)) + (countIfAlive (getElement row x)) | x <- [1..5]]
 
+countRowAndSurrounding :: [String] -> Int -> [Int]
+countRowAndSurrounding world 0 = add2Lists (countWholeRow $ getElement world 1) (countWholeRowIncludingThemself $ getElement world 2)
+countRowAndSurrounding world 5 = add2Lists (countWholeRowIncludingThemself $ getElement world 4) (countWholeRow $ getElement world 5)
+countRowAndSurrounding world rowIdx = add3Lists (countWholeRowIncludingThemself $ getElement world (rowIdx-1)) (countWholeRow $ getElement world rowIdx) (countWholeRowIncludingThemself $ getElement world (rowIdx+1))
+
 countNeighbours :: [String] -> [[Int]]
-countNeighbours world = 
-    let first = add2Lists (countWholeRow $ getElement world 1) (countWholeRowIncludingThemself $ getElement world 2)
-        middle = [add3Lists (countWholeRowIncludingThemself $ getElement world (idx-1)) (countWholeRow $ getElement world idx) (countWholeRowIncludingThemself $ getElement world (idx+1)) | idx <- [2..4]]
-        last = add2Lists (countWholeRowIncludingThemself $ getElement world 4) (countWholeRow $ getElement world 5)
-    in [first] ++ middle ++ [last]
+countNeighbours world = [countRowAndSurrounding world idx | idx <- [1..5]]
 
 al :: Char -> Int -> Char
 al state count
