@@ -11,6 +11,6 @@ for k=p
 
     if(k==10)
         disp(sqrt(x+1) + " " + sqrt(x))
-    end;
+    end
     disp("---")
-end;
+end
