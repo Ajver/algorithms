@@ -21,7 +21,9 @@ alphabetical_order() {
 }
 
 
-for i in {1..1}; do
+for i in {1..2}; do
+    clear
+    
     letters=$(echo {A..Z} | tr ' ' '\n' | shuf | head -n 5)
     echo $letters;
     sleep 3
@@ -35,16 +37,29 @@ for i in {1..1}; do
 
     echo "Wpisanee: $val"
 
-    # sleep 5
-
-    is_alph=$(alphabetical_order $val)
-    echo "IS ALH: $is_alph"
     if alphabetical_order "$val"; then
         echo "jest alfabetycznie"
         points=$[points + 1]
     else
-        points=$[points - 1]
+        echo "niealfabetyczne"
     fi
+
+    for ((i=0; i<${#val}; i++)); do
+        char="${val:$i:1}"
+
+        if [[ "$char" == " " ]]; then
+            continue
+        fi
+
+        if [[ "$letters" =~ $char ]]; then
+            echo "poprawna litera: $char"
+            points=$[points + 1]
+        else
+            echo "Niepoprawna litera: $char !!!"
+        fi
+    done
+
+    sleep 3
 
 done
 
