@@ -1,0 +1,69 @@
+clc; clear all; close all
+
+theta = pi/4
+R2D = [cos(theta), -sin(theta); sin(theta) cos(theta)]
+
+przes = [1, 0];
+P2D = [-1, -1;
+    1, -1;
+    1, 1;
+    -1, 1;
+    -1, -1 ];
+
+P2D = P2D + przes
+
+figure();
+plot(P2D(:, 1), P2D(:, 2), "bo-", "MarkerSize", 12)
+xlim([-2, 2])
+ylim([-2, 2])
+axis square
+hold on;
+
+obroconeP = (R2D * P2D')';
+
+plot(obroconeP(:, 1), obroconeP(:, 2), "ro-", "MarkerSize", 12)
+plot(0, 0, "w+", "MarkerSize", 10)
+
+
+%% 3D
+figure();
+
+R3Dz = [cos(theta), -sin(theta), 0;
+      sin(theta), cos(theta), 0;
+      0, 0, 1];
+
+R3Dx = [1, 0, 0;
+        0, cos(theta), -sin(theta);
+        0, sin(theta), cos(theta)];
+
+R3Dy = [cos(theta), 0, sin(theta);
+        0, 1, 0;
+        -sin(theta), 0, cos(theta)];
+
+P3D = [-1, -1, -1; 
+        1, -1, -1; 
+        1,  1, -1; 
+       -1,  1, -1;
+       -1, -1,  1;
+        1, -1,  1;
+        1,  1,  1;
+       -1,  1,  1;
+       -1, -1, -1;];
+
+plot3(P3D(:, 1), P3D(:, 2), P3D(:, 3), "bo-");
+xlim([[-2, 2]]);
+ylim([[-2, 2]]);
+zlim([[-2, 2]]);
+hold on;
+
+obrP3D = (R3Dy * P3D')'
+
+plot3(obrP3D(:, 1), obrP3D(:, 2), obrP3D(:, 3), "ro-");
+xlim([[-2, 2]]);
+ylim([[-2, 2]]);
+zlim([[-2, 2]]);
+xlabel("x");
+ylabel("y");
+zlabel("z");
+
+plot3([0,0], [-2,2], [0,0], "w-");
