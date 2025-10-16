@@ -24,7 +24,8 @@ for k=1:K
 end
 
 % Ec = x
-c = inv(E) * x'
+% c = inv(E) * x'
+c = E \ x'
 
 % c = A/2 * e^(i*fi)
 % |c| = A/2 => A = 2*|c|
@@ -33,4 +34,4 @@ kat_tl = angle(c)
 
 % Dk = dk * dt
 % dk = ??? z E?
-% dk = (-real(log(c))) / dt
+dk = (-real(log(c))) / dt

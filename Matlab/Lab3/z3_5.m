@@ -1,5 +1,5 @@
 % rowlin_ar.m
-clear all; close all;
+clc; clear all; close all;
 
 fpr = 10000; dt = 1/fpr;      % liczba probek danych na sekunde, okres probkowania
 f = [ 999   2500  3000  ];    % liczba powtorzen na sekunde skladowych sinusoid
@@ -22,8 +22,10 @@ omega = imag(pow);                       % czesc urojona
 fest = omega(K+1:2*K)/(2*pi*dt),         % czestotliwosci skladowych (dodatnie)
 dest = -real( pow(indx(K+1:2*K)) )/dt,   % tlumienie skladowych
 
-
 %% Wersja z szumem
+
+disp("=================")
+disp("SZUM")
 
 fpr = 10000; dt = 1/fpr;      % liczba probek danych na sekunde, okres probkowania
 f = [ 999   2500  3000  ];    % liczba powtorzen na sekunde skladowych sinusoid

@@ -48,7 +48,7 @@ zlim([[-2, 2]]);
 axis sqare;
 hold on;
 
-obrP3D = R3Dy * 
+obrP3D = (R3Dx * R3Dy * R3Dz * P3D')'
 
 plot3(obrP3D(:, 1), obrP3D(:, 2), obrP3D(:, 3));
 xlim([[-2, 2]]);
