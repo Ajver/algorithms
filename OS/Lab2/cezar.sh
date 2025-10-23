@@ -5,9 +5,9 @@
 # read -p "Wybierz (e-encrypt / d-decrypt): " wyb
 # read -p "Podaj offset: " offset
 
-tekst="CezZar"
+tekst="KmhHiz"
 wyb="d"
-offset=3
+offset=8
 
 
 ############################
