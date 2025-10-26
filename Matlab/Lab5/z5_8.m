@@ -1,11 +1,11 @@
 % interp_lagrange.m
-clc; clear all; close all;
+clear all; close all;
 
 % temperatura w Krakowie
 x = [ 5, 6, 8, 11 ]; y = [ -2, 3, 7, 10 ];  
 xi = [4: 1/12 : 12];
 
-[yi,a] = funTZ_lagrange(x,y,xi);  % nasza funkcja interpolujaca
+[yi,a,p] = funTZ_newton(x,y,xi);  % nasza funkcja interpolujaca
 yii = polyval(a,xi);               % oblicz wartosci wielomianu "a" w punktach "xi" 
 a,                                 % obliczone wsp. wielomianu: aN,...,a1,a0
 figure; plot(x,y,'ro',xi,yi,'b-',xi,yii,'k-'); title('y=f(x)');   % rysunek
@@ -21,13 +21,15 @@ disp("Powyzej 1 *C od godz: " + floor(godz_pow_threshold) + ":" + floor(((godz_p
 plot(xlim, [y_treshold , y_treshold ], "g-");
 plot(godz_pow_threshold, y_treshold, "r*", MarkerSize=17);
 
+
+
 %% Nowa dana
 disp("Po dodaniu nowej danej y(14) = 14");
 x(end+1) = 14;
 y(end+1) = 14;
 xi = [4 : 1/12 : 15];
 
-[yi,a] = funTZ_lagrange(x,y,xi);  % nasza funkcja interpolujaca
+[yi,a,p] = funTZ_newton(x,y,xi);  % nasza funkcja interpolujaca
 yii = polyval(a,xi);               % oblicz wartosci wielomianu "a" w punktach "xi" 
 figure; plot(x,y,'ro',xi,yi,'b-',xi,yii,'k-'); title('y=f(x)');   % rysunek
 hold on;
