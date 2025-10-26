@@ -29,6 +29,9 @@ end
 if(1)
   figure;
   ysum = zeros(1,Ni);
+
+  plots_n = gobjects(1, Nk); % prealokacja tablicy uchwytów do wykresów
+  wzory_n = cell(1, Nk); % komórki na nazwy legendy
   for k=1:Nk
       for i=1:Ni
           if(k==1)      dxi = xi(i)-xk(2:Nk);
@@ -38,14 +41,22 @@ if(1)
           yL(i) = yk(k)*prod(dxi)/dxk(k) ;   % kolejny wielomian Lagrange'a
           ysum(i) = ysum(i) + yL(i);
       end
-      plot(xk,yk,'ko',xk,zeros(1,Nk),'ko',xi,yL); hold on;
+      plot(xk,yk,'ko',xk,zeros(1,Nk),'ko'); hold on;
+
+      plots_n(k) = plot(xi, yL);
+      wzor = "Li(x)=";
+
+      % for zm=1:Nk
+      wzor = "a+" + num2str(k) + "foo"
+      wzory_n{k} = [wzor];
   end
+
   plot(xi,ysum,'k--');
   xlabel('x'); ylabel('y'); title('MOJA (5.6): y=f(x)'); grid;
+
+  %% Pokazywanie wspolczynnikow
+  legend(plots_n, wzory_n);
+
 end
 
 
-
-%% Pokazywanie wspolczynnikow
-
-legend(["a", "b", "c", "d"])
