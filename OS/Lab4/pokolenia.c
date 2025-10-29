@@ -67,7 +67,7 @@ int main() {
 
     int fork_pid = fork();
     
-    if (fork_pid == 0) {
+    if (fork_pid != 0) {
         // It's the parent process!
         prctl(PR_SET_NAME, "Rodzic");
         print_info();
@@ -81,7 +81,7 @@ int main() {
 
         int grandchild_pid = fork();
 
-        if (grandchild_pid == 0) {
+        if (grandchild_pid != 0) {
             hierarchy_level = PARENT;
             prctl(PR_SET_NAME, "Rodzic");
         }else {
@@ -92,7 +92,7 @@ int main() {
         }
     }
 
-    if (fork_pid == 0) {
+    if (fork_pid != 0) {
         prctl(PR_SET_NAME, "Dziadek");
     }
 
@@ -101,7 +101,7 @@ int main() {
 
     if (hierarchy_level == GRANDPA) {
         int fork_id = fork();
-        if (fork_id != 0) {
+        if (fork_id == 0) {
             indends += 2;
             hierarchy_level = PARENT;
             prctl(PR_SET_NAME, "Wujek");
@@ -109,7 +109,7 @@ int main() {
         }
     }else if (hierarchy_level == PARENT) {
         int fork_id = fork();
-        if (fork_id != 0) {
+        if (fork_id == 0) {
             indends += 2;
             hierarchy_level = CHILD;
             prctl(PR_SET_NAME, "Brat");
