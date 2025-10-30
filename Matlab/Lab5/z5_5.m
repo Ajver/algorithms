@@ -21,6 +21,16 @@ disp("Powyzej 1 *C od godz: " + floor(godz_pow_threshold) + ":" + floor(((godz_p
 plot(xlim, [y_treshold , y_treshold ], "g-");
 plot(godz_pow_threshold, y_treshold, "r*", MarkerSize=17);
 
+%% godzina pow 1*C metoda pierwiastkow wielomianu
+a_przes = a;
+a_przes(end) = a_przes(end) - y_treshold;  % przesuniecie wielomianu do treshold
+pierwiastki = roots(a_przes);
+pierw_rzecz = pierwiastki(imag(pierwiastki) == 0);
+
+disp("Metoda pierwiastkow wielomianu:");
+disp("Powyzej 1 *C od godz: " + floor(godz_pow_threshold) + ":" + floor(((godz_pow_threshold-floor(godz_pow_threshold)) * 60)))
+
+
 %% Nowa dana
 disp("Po dodaniu nowej danej y(14) = 14");
 x(end+1) = 14;
