@@ -1,4 +1,3 @@
-% interp_lagrange.m
 clear all; close all;
 
 % temperatura w Krakowie

@@ -28,7 +28,7 @@ pierwiastki = roots(a_przes);
 pierw_rzecz = pierwiastki(imag(pierwiastki) == 0);
 
 disp("Metoda pierwiastkow wielomianu:");
-disp("Powyzej 1 *C od godz: " + floor(godz_pow_threshold) + ":" + floor(((godz_pow_threshold-floor(godz_pow_threshold)) * 60)))
+disp("Powyzej 1 *C od godz: " + floor(pierw_rzecz) + ":" + floor(((pierw_rzecz-floor(pierw_rzecz)) * 60)))
 
 
 %% Nowa dana
