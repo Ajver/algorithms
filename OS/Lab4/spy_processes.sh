@@ -2,7 +2,7 @@
 
 # 1.
 ps -eo pid,state,ppid,comm
-ps -o pid,state,ppid,cmd -p <pid>
+ps -o pid,state,ppid,comm -p <pid>
 kill -9 <pid>
 
 # 2.

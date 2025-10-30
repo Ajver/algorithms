@@ -51,6 +51,8 @@ State:	Z (zombie)
 
 Np. zabijajac rodzica Zombie (np. Dziadka)
 
+Lub rodzic powinien wywolac `wait()`
+
 ## Jak zmienia się drzewo procesów po wysłaniu sygnału SIGSTOP do rodzica?
 
 ```sh

@@ -19,8 +19,6 @@ void printf_ind(const char* text, ...) {
     va_list valist;
     va_start(valist, text);
 
-    char *formatted;
-
     for (int i=0; i<indends; i++) printf(" ");
 
     vprintf(text, valist);
