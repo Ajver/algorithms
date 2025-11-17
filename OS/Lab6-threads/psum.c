@@ -40,6 +40,12 @@ int min(int a, int b) {
     return a < b ? a : b;
 }
 
+void print_arr(int* arr, int size) {
+    for (int i = 0; i < size; i++) {
+        printf("[%d] = %d\n", i, arr[i]);
+    }
+}
+
 
 int main(int argc, char *argv[]) {
     if (argc < 4) {
@@ -60,11 +66,12 @@ int main(int argc, char *argv[]) {
 
     for (int i = 0; i < tab_len; i++) {
         table[i] = rand() % 10;
-        printf("%d > %d\n", i, table[i]);
     }
 
+    print_arr(table, tab_len);
+
     int sum = sum_subarray(table, 0, tab_len);
-    printf("Sum: %d\n", sum);
+    printf("\nSum: %d\n", sum);
 
     pthread_t* threads = (pthread_t*)malloc(t * sizeof(pthread_t));
     int* k_sums = (int*)malloc(k * sizeof(int));
@@ -98,11 +105,8 @@ int main(int argc, char *argv[]) {
         total_iterations_left -= iters_this_epoch;
     }
 
-    printf("-------------\n\n");
-
-    for (int i = 0; i < k; i++) {
-        printf("%d > %d\n", i, k_sums[i]);
-    }
+    printf("-------------\n\nk sums:\n");
+    print_arr(k_sums, k);
 
     int sum_of_subs = sum_subarray(k_sums, 0, k);
     printf("Sum of subs: %d\n", sum_of_subs);
