@@ -18,7 +18,7 @@ assert (sum(symetrycznosc, "all") == N^2);
 tol = 1e-4;
 
 R = eye(N);
-maxIterations = 10;
+maxIterations = 100;
 for k=1:maxIterations
     D = diag(diag(A));  % tylko glowna przekatna
     A_rest = A - D;  % A bez glownej przekatnej
