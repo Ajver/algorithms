@@ -11,13 +11,15 @@ gcc psum.c -o psum -lm && ./psum 3 4 4
 
 typedef struct {
     int* arr;
-    int low;
-    int high;
+    int start_idx;
+    int end_idx;
 } ThreadSummingArgs;
 
-int sum_subarray(int* a, int low, int high) {
+int sum_subarray(int* a, int start_idx, int end_idx) {
+    // Sums elements from a, from start_idx to end_idx EXCLUDING!
+    // [ start_idx, end_idx )
     int sum = 0;
-    for (int i = low; i < high; i++) {
+    for (int i = start_idx; i < end_idx; i++) {
         sum += a[i];
     }
     return sum;
@@ -28,9 +30,9 @@ void* thread_summing(void* any_args) {
     ThreadSummingArgs* args = any_args;
 
     int* result = malloc(sizeof(int));
-    *result = sum_subarray(args->arr, args->low, args->high);
+    *result = sum_subarray(args->arr, args->start_idx, args->end_idx);
 
-    printf("sum[%d:%d]: %d\n", args->low, args->high, *result);
+    printf("sum[%d:%d]: %d\n", args->start_idx, args->end_idx, *result);
 
     free(args);
     return result;
@@ -73,7 +75,10 @@ int main(int argc, char *argv[]) {
     int sum = sum_subarray(table, 0, tab_len);
     printf("\nSum: %d\n", sum);
 
+    // Buffer of t threads batch. When t < k, the threads are re-used in next epochs,
+    // in order to calculate the whole array.
     pthread_t* threads = (pthread_t*)malloc(t * sizeof(pthread_t));
+
     int* k_sums = (int*)malloc(k * sizeof(int));
 
     int k_sums_offset;
@@ -83,23 +88,25 @@ int main(int argc, char *argv[]) {
         int idx_offset = epoch*t;
 
         for (int i = 0; i < iters_this_epoch; i++) {
-            int idx = idx_offset + i;
+            int subarr_idx = idx_offset + i;
 
             ThreadSummingArgs* args = malloc(sizeof *args);
             args->arr = table;
-            args->low = idx * n;
-            args->high = args->low + n;
+            args->start_idx = subarr_idx * n;
+            args->end_idx = args->start_idx + n;
             pthread_create(&threads[i], NULL, thread_summing, args);
         }
         
         for (int i = 0; i < iters_this_epoch; i++) {
             // This loop is executted up to k times. 
-            // Each epoch solves t sums, but t may be < than k, so we need another epoch.
+            // Each epoch solves t sums, but t may be < than k, so we need another epoch to calculate the rest
             
             int* result;
-            int idx = idx_offset + i;
             pthread_join(threads[i], (void**)&result);
-            k_sums[idx] = *result;
+
+            int subarr_idx = idx_offset + i;
+            k_sums[subarr_idx] = *result;
+            free(result);
         }
 
         total_iterations_left -= iters_this_epoch;
@@ -112,6 +119,7 @@ int main(int argc, char *argv[]) {
     printf("Sum of subs: %d\n", sum_of_subs);
 
     free(threads);
+    free(k_sums);
     free(table);
 
     return 0;
