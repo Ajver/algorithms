@@ -17,8 +17,11 @@ const bool DEBUG_PRINT = false;
 
 typedef struct {
     int* arr;
-    int start_idx;
-    int end_idx;
+    int* k_sums;
+    int n; // size of the batch
+
+    int start_k;
+    int end_k;
 } ThreadSummingArgs;
 
 
@@ -48,13 +51,16 @@ int sum_subarray(int* a, int start_idx, int end_idx) {
 void* thread_summing(void* any_args) {
     ThreadSummingArgs* args = any_args;
 
-    int* result = malloc(sizeof(int));
-    *result = sum_subarray(args->arr, args->start_idx, args->end_idx);
-
-    debug_printf("sum[%d:%d]: %d\n", args->start_idx, args->end_idx, *result);
+    for (int kth_batch = args->start_k; kth_batch < args->end_k; kth_batch++) {
+        int start_idx = kth_batch * args->n;
+        int end_idx = start_idx + args->n;
+        int result = sum_subarray(args->arr, start_idx, end_idx);
+        args->k_sums[kth_batch] = result;
+        debug_printf("sum[%d:%d]: %d\n", start_idx, end_idx, result);
+    }
 
     free(args);
-    return result;
+    return NULL;
 }
 
 int min(int a, int b) {
@@ -72,8 +78,9 @@ void print_arr(int* arr, int size) {
 }
 
 double create_and_sum_array(int n, int k, int t) {
-    int tab_len = n * k;
+    t = min(k, t);  // No point in having more threads, than subarrays
 
+    int tab_len = n * k;
     printf("Creating %dx%d table, summing using %d threads\n", n, k, t);
 
     // 1D array, with n*k elements
@@ -94,38 +101,22 @@ double create_and_sum_array(int n, int k, int t) {
 
     int* k_sums = (int*)malloc(k * sizeof(int));
 
-    int k_sums_offset;
-    int total_iterations_left = k;
+    int batch_size = (int)ceil((double)k / t);
 
     // clock is more precise than time
     clock_t start_time = clock();
-    for (int epoch = 0; epoch < ceil((float)k / t); epoch++) {
-        int iters_this_epoch = min(total_iterations_left, t);
-        int idx_offset = epoch*t;
-
-        for (int i = 0; i < iters_this_epoch; i++) {
-            int subarr_idx = idx_offset + i;
-
-            ThreadSummingArgs* args = malloc(sizeof *args);
-            args->arr = table;
-            args->start_idx = subarr_idx * n;
-            args->end_idx = args->start_idx + n;
-            pthread_create(&threads[i], NULL, thread_summing, args);
-        }
-        
-        for (int i = 0; i < iters_this_epoch; i++) {
-            // This loop is executted up to k times. 
-            // Each epoch solves t sums, but t may be < than k, so we need another epoch to calculate the rest
-            
-            int* result;
-            pthread_join(threads[i], (void**)&result);
-
-            int subarr_idx = idx_offset + i;
-            k_sums[subarr_idx] = *result;
-            free(result);
-        }
-
-        total_iterations_left -= iters_this_epoch;
+    for (int i = 0; i < t; i++) {
+        ThreadSummingArgs* args = malloc(sizeof *args);
+        args->arr = table;
+        args->k_sums = k_sums;
+        args->n = n;
+        args->start_k = i * batch_size;
+        args->end_k = args->start_k + batch_size;
+        pthread_create(&threads[i], NULL, thread_summing, args);
+    }
+    
+    for (int i = 0; i < t; i++) {
+        pthread_join(threads[i], NULL);
     }
     clock_t end_time = clock();
 
@@ -134,9 +125,10 @@ double create_and_sum_array(int n, int k, int t) {
 
     int sum_of_subs = sum_subarray(k_sums, 0, k);
     printf("Sum of subs: %d\n", sum_of_subs);
+    printf("are equal?  %s\n", sum == sum_of_subs ? "Yes." : "No.");
 
     double duration = ((double)end_time - start_time) / CLOCKS_PER_SEC;
-    printf("t-threading summing took: %g seconds.\n", duration);
+    printf("\nt-threading summing took: %g seconds.\n", duration);
 
     free(threads);
     free(k_sums);
