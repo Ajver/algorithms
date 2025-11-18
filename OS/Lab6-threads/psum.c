@@ -93,14 +93,13 @@ double create_and_sum_array(int n, int k, int t) {
     print_arr(table, tab_len);
 
     int sum = sum_subarray(table, 0, tab_len);
-    printf("\nSum: %d\n", sum);
+    printf("Sum: %d\n\n", sum);
 
-    // Buffer of t threads batch. When t < k, the threads are re-used in next epochs,
-    // in order to calculate the whole array.
     pthread_t* threads = (pthread_t*)malloc(t * sizeof(pthread_t));
 
     int* k_sums = (int*)malloc(k * sizeof(int));
 
+    // Amount of subarrays summed by one thread
     int batch_size = (int)ceil((double)k / t);
 
     // clock is more precise than time
@@ -111,7 +110,7 @@ double create_and_sum_array(int n, int k, int t) {
         args->k_sums = k_sums;
         args->n = n;
         args->start_k = i * batch_size;
-        args->end_k = args->start_k + batch_size;
+        args->end_k = min(args->start_k + batch_size, k);  // Make sure it doesn't exit the k
         pthread_create(&threads[i], NULL, thread_summing, args);
     }
     
@@ -125,10 +124,10 @@ double create_and_sum_array(int n, int k, int t) {
 
     int sum_of_subs = sum_subarray(k_sums, 0, k);
     printf("Sum of subs: %d\n", sum_of_subs);
-    printf("are equal?  %s\n", sum == sum_of_subs ? "Yes." : "No.");
+    printf("\nare equal?  %s\n", sum == sum_of_subs ? "Yes." : "No.");
 
     double duration = ((double)end_time - start_time) / CLOCKS_PER_SEC;
-    printf("\nt-threading summing took: %g seconds.\n", duration);
+    printf("\nt-threaded summing took: %g seconds.\n", duration);
 
     free(threads);
     free(k_sums);
