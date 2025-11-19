@@ -1,18 +1,13 @@
 % evd_qr.
 clc; clear all; close all;
 
-if(0)  A = [
+if(0) A = [
     16     2     3    13;
      5    11     10     8;
      9     7     6.1    12;
      4    14    15     1
     ];   % analizowana macierz
-else   A = [
-     2 0 0 3
-     0 4 0 1
-     0 0 1 0
-     3 1 0 6
- ];
+else  A = hilb(5)
 end
 [N,N]=size(A);                 % jej wymiary
 x = ones(N,1);                 % inicjalizacja
