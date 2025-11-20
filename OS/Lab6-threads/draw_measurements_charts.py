@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
 import numpy as np
 
 dataset = pd.read_csv("measurements.csv")
@@ -10,14 +10,16 @@ durations_categorized = {t: dataset["duration"][dataset["t"] == t] for t in uniq
 duration_means = {t: durations_categorized[t].mean() for t in unique_t}
 
 # fit LSE line
-model = LinearRegression()
-X = np.array(dataset["t"])
+X = np.ones((dataset["t"].shape[0], 2))
+X[:, 1] = dataset["t"]
 y = dataset["duration"]
-result = model.fit(X.reshape(-1, 1), y)
-print(f"{result.coef_=}")
+model = sm.OLS(y, X)
+result = model.fit()
+print(f"{result.summary()}")
 
-b0 = result.intercept_
-b1 = result.coef_[0]
+b0 = result.params.iloc[0]
+b1 = result.params.iloc[1]
+p_value = result.pvalues[1]
 
 fig, ax = plt.subplots()
 ax.set_title(f"n = {dataset['n'][0]}, k = {dataset['k'][0]}")
@@ -28,7 +30,7 @@ ax.set_xticklabels(durations_categorized.keys())
 
 xlim = ax.get_xlim()
 A, B = (xlim[0], b0 + b1*xlim[0]), (xlim[1], b0 + b1*xlim[1])
-ax.axline((xlim[0], b0 + b1*xlim[0]), (xlim[1], b0 + b1*xlim[1]), c="r", linestyle="--", label=f"{b0} + {b1}*t")
+ax.axline((xlim[0], b0 + b1*xlim[0]), (xlim[1], b0 + b1*xlim[1]), c="r", linestyle="--", label=f"{b0} + {b1}*t\np = {p_value}")
 
 ax.set_xlabel("Number of Threads (t)")
 ax.set_ylabel("Duration (seconds)")

@@ -42,7 +42,7 @@ int sum_subarray(int* a, int start_idx, int end_idx) {
     // [ start_idx, end_idx )
     int sum = 0;
     for (int i = start_idx; i < end_idx; i++) {
-        sum += a[i];
+        sum += (int)sqrt(a[i] * a[i]);
     }
     return sum;
 }
