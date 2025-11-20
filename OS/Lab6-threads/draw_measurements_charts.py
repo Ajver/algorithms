@@ -9,6 +9,9 @@ unique_t = dataset["t"].unique()
 durations_categorized = {t: dataset["duration"][dataset["t"] == t] for t in unique_t}
 duration_means = {t: durations_categorized[t].mean() for t in unique_t}
 
+corr = np.corrcoef(dataset["t"], dataset["duration"])[0, 1]
+print(f"{corr=}")
+
 # fit LSE line
 X = np.ones((dataset["t"].shape[0], 2))
 X[:, 1] = dataset["t"]
