@@ -1,38 +1,75 @@
 clear all; close all;
 
-[X,map] = imread('dog.jpg');         % wczytaj obraz
-wymiary = size(X), 
+X = imread('dog.jpg');         
+% X = imread('grass.png');         
+wymiary = size(X),
+X = double(X) / 255.0;                           % pokaz go
+figure; image(X); title('Oryginal'); axis image off;
+axis equal;
 
-X = double(X);                           % pokaz go
-figure; image(X); title('Oryginal');
-colormap(map); axis image off;
+imwrite(X, "original.png");
 
 U = zeros(wymiary(:, :, 1));
 S = zeros(wymiary(:, :, 1));
 V = zeros(wymiary(:, :, 1));
-pause
-for color=1:3
-    [U(:, :, color),S(:, :, color),V(:, :, color)] = svd(X(:, :, color)); % zrob dekompozycje SVD
-    pause
+
+for channel=1:3
+    [U(:, :, channel),S(:, :, channel),V(:, :, channel)] = svd(X(:, :, channel)); % zrob dekompozycje SVD
 end
 
-for color=1:3
-    reconstructedIMG(:, :, color) = U(:, :, color)*S(:, :, color)*V(:, :, color)';
+reconstructedIMG = zeros(wymiary);
+for channel=1:3
+    reconstructedIMG(:, :, channel) = U(:, :, channel)*S(:, :, channel)*V(:, :, channel)';
 end
 
 figure; image(reconstructedIMG); title('SVD');           % odtworz obraz ze wszystkich skladowych
     axis image off;
 
-pause;
+% pause;
 
-figure; stem(diag(S)); title('Wartosci osobliwe'); pause
+figure; 
+    title('Wartosci osobliwe');
+    stem(diag(S(:, :, 1)), "r"); hold on; 
+    stem(diag(S(:, :, 2)), "g");
+    stem(diag(S(:, :, 3)), "b");
 
+% pause
+
+MSEs = [];
 mv=[1, 2, 3, 4, 5, 10, 15, 20, 25, 50];  % okresl liczbe skladowych
-for i = 1:length(mv)                     % PETLA - START
-    mv(i)                                % wybrana liczba skladowych
-    mask = zeros( size(S) );             % maska zerujaca wartosci osobliwe (w.o.)
-    mask( 1:mv(i), 1:mv(i) ) = 1;        % wstaw "1" pozostawiajace najwieksze w.o. 
-    figure; image( U*(S.*mask)*V' );     % synteza i pokaznie obrazu zrekonstruowanego
-    colormap(map); axis image off;       % bez osi
-    pause                                % a widzisz?
+for i = 1:length(mv)                     % PETLA - START                               
+    mask = zeros(wymiary(1), wymiary(2));             % maska zerujaca wartosci osobliwe (w.o.)
+    mask(1:mv(i), 1:mv(i)) = 1;        % wstaw "1" pozostawiajace najwieksze w.o. 
+    reconstructedIMG = zeros(wymiary);
+    for channel=1:3
+        u = U(:, :, channel);
+        s = S(:, :, channel);
+        v = V(:, :, channel);
+        reconstructedIMG(:, :, channel) = u*(s.*mask)*v';
+    end
+    figure; image(reconstructedIMG);     % synteza i pokaznie obrazu zrekonstruowanego
+    axis image off;      
+
+    mv(i) 
+    diff = (X - reconstructedIMG).^2;
+    MSE = mean(diff, "all"),
+    MSEs(i) = MSE;
+
+    % pause                                % a widzisz?
 end                                      % PETLA - STOP
+
+figure; plot(mv, MSEs, "bo-"); title("MSE dla roznych ilosci liczb skladowych");
+
+mv = 50;
+mask = zeros(wymiary(1), wymiary(2));             
+mask(1:50, 1:50) = 1;        
+
+compressedIMG = zeros(wymiary);
+for channel=1:3
+    u = U(:, :, channel);
+    s = S(:, :, channel);
+    v = V(:, :, channel);
+    compressedIMG(:, :, channel) = u*(s.*mask)*v';
+end
+
+imwrite(compressedIMG, "compressed.png");
