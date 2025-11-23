@@ -1,7 +1,7 @@
 % equnonlin_solve.m
 clear all; close all;
 
-it = 12;
+it = 30;
 
 %%
 a  = pi-pi/5; b=pi+pi/5;  % znajdz zero funkcji y=sin(x) dla x=pi
@@ -19,7 +19,7 @@ switch nachylenie_okolo
         a = -1; b = 5;
         A = 0.15; B = 0.3; C = 0.1;  
     case 45
-        a = -4; b = 1;
+        a = -4; b = -2;
         A = -0.2; B = 0.5; C = 1;  
     case 80
         a = 0; b = 6;
@@ -38,23 +38,22 @@ TOL = 0.001;
 
 %%
 x = -10 : 0.01 : 10;
-figure; plot( x, f(x), 'b-', x, fp(x),'r-'); grid; xlabel('x'); title('f(x), fp(x)');
-legend('Funkcja','Jej pochodna');
+figure; plot( x, f(x), 'b-', x, fp(x),'r-', [a, b], [f(a), f(b)], "g*-" ); 
+grid; xlabel('x'); title('f(x), fp(x)');
+legend('Funkcja','Jej pochodna', "a,b");
 
-cb = nonlinsolvers( f, fp, a, b, 'bisection', it );
-cr = nonlinsolvers( f, fp, a, b, 'regula-falsi', it);
-cn = nonlinsolvers( f, fp, a, b, 'newton-raphson', it);
+cs = nonlinsolvers( f, fp, a, b, 'sieczne', it);
+
+
 figure;     
-    plot( 1:it,cb,'o-' ); hold on;
-    plot( 1:it,cr,'*-' );
-    plot( 1:it,cn,'^-' );
+    plot( 1:it,cs,'o-' ); hold on;
+    
+    plot( xlim, [z, z], "k--" );
 
 xlabel('iter'); title('c(iter)');
-grid on, legend('Bisection','Regula-Falsi','Newton-Raphson');
+grid on, legend("Sieczne", "zero");
 
 kiedy_zbierzne = @(preds) min(find(abs(preds - z) <= TOL));
 
-fprintf('Bisection it: %d, result: %f, error: %f\n', kiedy_zbierzne(cb), cb(end), cb(end) - z);
-fprintf('Regula-Falsi method it: %d, result: %f, error: %f\n', kiedy_zbierzne(cr), cr(end));
-fprintf('Newton-Raphson method it: %d, result: %f, error: %f\n', kiedy_zbierzne(cn));
+fprintf('Sieczne it: %d, result: %f, error: %f\n', kiedy_zbierzne(cs), cs(end), cs(end) - z);
 

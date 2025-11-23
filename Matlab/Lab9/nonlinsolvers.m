@@ -14,6 +14,10 @@ for i = 1 : iter
         c = b-fb*(b-a)/(fb-fa);
     case 'newton-raphson',
         c = c-fc/fpc;
+    case 'sieczne',
+        if( abs(c-a) < abs(c-b) ) a=c; end
+        if( abs(c-a) > abs(c-b) ) b=c; end
+        c = b - (fb*(b-a))/(fb - fa);
   otherwise,
       error('Brak metody');
   end
