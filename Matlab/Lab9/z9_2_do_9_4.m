@@ -12,7 +12,7 @@ TOL = 0.001 * pi;  % 1 promil pi
 
 
 %%
-nachylenie_okolo = 45;
+nachylenie_okolo = 10;
 
 switch nachylenie_okolo
     case 10
@@ -40,6 +40,7 @@ TOL = 0.001;
 x = -10 : 0.01 : 10;
 figure; plot( x, f(x), 'b-', x, fp(x),'r-', [a, b], [f(a), f(b)], "g*-" ); 
 grid; xlabel('x'); title('f(x), fp(x)');
+axis equal;
 legend('Funkcja','Jej pochodna', "a,b");
 
 cb = nonlinsolvers( f, fp, a, b, 'bisection', it );
