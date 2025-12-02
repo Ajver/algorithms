@@ -23,7 +23,7 @@ x0 = [ 0.5, 2 ];                                    % punkt startowy
 
 % fminsearch() - SIMPLEX
 figure
-options = optimset('OutputFcn',@bananaout,'Display','off');
+options = optimset('OutputFcn',@optim_out,'Display','off');
 [x,fval,eflag,output] = fminsearch(fun,x0,options);
 title('Rosenbrock - via fminsearch() SIMPLEX'); 
 if (PAUSE); pause; end
@@ -39,7 +39,7 @@ disp(['Number of solver iterations for fminsearch() SIMPLEX was ',num2str(output
 % fminunc() - QUASI-NEWTON
 figure
 options = optimoptions('fminunc','Display','off',...
-          'OutputFcn',@bananaout,'Algorithm','quasi-newton');
+          'OutputFcn',@optim_out,'Algorithm','quasi-newton');
 [x,fval,eflag,output] = fminunc( fun, x0, options );
 title('Rosenbrock - fminunc() QUASI-NEWTON');  
 if (PAUSE); pause; end
@@ -108,7 +108,7 @@ disp(['Number of solver iterations for ANALYTIC HESSIAN was ',num2str(output.ite
 
 % lsqnonlin() - NON-LINEAR LEAST-SQUARES
 figure
-options = optimoptions('lsqnonlin','Display','off','OutputFcn',@bananaout);
+options = optimoptions('lsqnonlin','Display','off','OutputFcn',@optim_out);
 vfun = @(x)[ 10*(x(2) - x(1)^2), 1 - x(1)];
 [x,resnorm,residual,eflag,output] = lsqnonlin(vfun,x0,[],[],options);
 title('Rosenbrock - lsqnonlin() NONLINEAR LEAST-SQUARES');  

@@ -1,4 +1,4 @@
-function stop = bananaout(x,~,state)
+function stop = optim_out(x,~,state)
 persistent ph
 global a
 global x0
