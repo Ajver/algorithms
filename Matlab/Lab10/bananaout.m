@@ -2,6 +2,7 @@ function stop = bananaout(x,~,state)
 persistent ph
 global a
 global x0
+global fun
 stop = false;
 switch state
     case 'init'
@@ -9,7 +10,6 @@ switch state
        xx = -2:.2:2;
        yy = -1:.2:3;
        [xx,yy] = meshgrid(xx,yy);
-       fun = @(x) a*(x(2)-x(1).^2).^2 + (1-x(1)).^2;
        zz = a*(yy-xx.^2).^2 + (1-xx).^2;
        % Set up the appropriate colormap
        % In this case, the colormap has been chosen to give the surf plot
