@@ -149,10 +149,6 @@ resultsTable = cell2table(results, ...
     'VariableNames', {'NazwaMetody', 'NazwaFunkcji', 'LiczbaWywolanFunkcji', 'LiczbaIteracjiAlgorytmu'});
 resultsTable = sortrows(resultsTable, 'LiczbaWywolanFunkcji', 'descend');
 
-disp(' ');
-disp('Tabela wyników (posortowana malejąco po Liczbie wywołań funkcji):');
-disp(resultsTable);
-
 % Przykład wyświetlenia tabeli w formacie podobnym do podanego (opcjonalnie)
 disp(' ');
 disp('Nazwa metody                      Nazwa funkcji       #wyw. funkcji  # iter. algorytmu');

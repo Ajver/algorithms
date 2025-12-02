@@ -121,7 +121,7 @@ if (LSQNONLIN)
     figure
     options = optimoptions('lsqnonlin','Display','off','OutputFcn',@optim_out);
     vfun = @(x)[ (x(1))^2 + x(2) - 11;
-             x(1) + x(2)^2 - 7 ];
+                  x(1) + x(2)^2 - 7 ];
     [x,resnorm,residual,eflag,output] = lsqnonlin(vfun,x0,[],[],options);
     title('Rosenbrock - lsqnonlin() NONLINEAR LEAST-SQUARES');  
     if (PAUSE); pause; end
@@ -159,10 +159,6 @@ set(groot,'DefaultFigureColormap',parula(64))
 resultsTable = cell2table(results, ...
     'VariableNames', {'NazwaMetody', 'NazwaFunkcji', 'LiczbaWywolanFunkcji', 'LiczbaIteracjiAlgorytmu'});
 resultsTable = sortrows(resultsTable, 'LiczbaWywolanFunkcji', 'descend');
-
-disp(' ');
-disp('Tabela wyników (posortowana malejąco po Liczbie wywołań funkcji):');
-disp(resultsTable);
 
 % Przykład wyświetlenia tabeli w formacie podobnym do podanego (opcjonalnie)
 disp(' ');
