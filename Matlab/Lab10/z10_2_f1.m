@@ -12,30 +12,29 @@ set(groot,'DefaultFigureColormap',hsv(64))
 global x0
 global fun
 global xEND
-offset = 2;  % move the func 
-xEND = [pi-offset, pi-offset];
+global custom_domain_range
+custom_domain_range = [0, 5; 1, 5];
+xEND = [pi, pi];
 
 % Easom function
 % (https://en.wikipedia.org/wiki/Test_functions_for_optimization)
-fun = @(x) (-cos(x(1)+offset)*cos(x(2)+offset) .* exp(-((x(1)-pi+offset)^2 + (x(2)-pi+offset)^2)));
-x0 = [ 0.3, 1.0 ];                                    % punkt startowy
+fun = @(x) (-cos(x(1))*cos(x(2)) .* exp(-((x(1)-pi)^2 + (x(2)-pi)^2)));
+x0 = [ 2.0, 2.5 ];                                    % punkt startowy
 
 % Helper vars for shorter notation:
-a = offset;
-b = pi - offset;
-d1fun1 = @(x) (exp(-((x(1)-b)^2 + (x(2)-b)^2)) .* ...
-    (sin(x(1)+a).*cos(x(2)+a) - 2*(-(x(1)-b)).*cos(x(1)+a).*cos(x(2)+a)));
-d1fun2 = @(x) (exp(-((x(1)-b)^2 + (x(2)-b)^2)) .* ...
-    (cos(x(1)+a).*sin(x(2)+a) - 2*(-(x(2)-b)).*cos(x(1)+a).*cos(x(2)+a)));
-d2fun11 = @(x) (exp(-((x(1)-b)^2 + (x(2)-b)^2)) .* cos(x(2)+a) .* ...
-    (cos(x(1)+a).*(3 - 4*(-(x(1)-b)).^2) + 4*(-(x(1)-b)).*sin(x(1)+a)));
+d1fun1 = @(x) (exp(-((x(1)+pi)^2 + (x(2)+pi)^2)) .* ...
+    (sin(x(1)).*cos(x(2)) - 2*(-(x(1)+pi)).*cos(x(1)).*cos(x(2))));
+d1fun2 = @(x) (exp(-((x(1)+pi)^2 + (x(2)+pi)^2)) .* ...
+    (cos(x(1)).*sin(x(2)) - 2*(-(x(2)+pi)).*cos(x(1)).*cos(x(2))));
+d2fun11 = @(x) (exp(-((x(1)+pi)^2 + (x(2)+pi)^2)) .* cos(x(2)) .* ...
+    (cos(x(1)).*(3 - 4*(-(x(1)+pi)).^2) + 4*(-(x(1)+pi)).*sin(x(1))));
 
-d2fun22 = @(x) (exp(-((x(1)-b)^2 + (x(2)-b)^2)) .* cos(x(1)+a) .* ...
-    (cos(x(2)+a).*(3 - 4*(-(x(2)-b)).^2) + 4*(-(x(2)-b)).*sin(x(2)+a)));
+d2fun22 = @(x) (exp(-((x(1)+pi)^2 + (x(2)+pi)^2)) .* cos(x(1)) .* ...
+    (cos(x(2)).*(3 - 4*(-(x(2)+pi)).^2) + 4*(-(x(2)+pi)).*sin(x(2))));
 
-d2fun12 = @(x) (exp(-((x(1)-b)^2 + (x(2)-b)^2)) .* ...
-    (sin(x(1)+a) - 2*(-(x(1)-b)).*cos(x(1)+a)) .* ...
-    (2*(-(x(2)-b)).*cos(x(2)+a) - sin(x(2)+a)));
+d2fun12 = @(x) (exp(-((x(1)+pi)^2 + (x(2)+pi)^2)) .* ...
+    (sin(x(1)) - 2*(-(x(1)+pi)).*cos(x(1))) .* ...
+    (2*(-(x(2)+pi)).*cos(x(2)) - sin(x(2))));
 d2fun21 = d2fun12;
 
 

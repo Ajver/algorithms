@@ -13,18 +13,21 @@ global x0
 global fun
 global xEND
 offset = 2;  % move the func 
-xEND = [1, 2];
+xEND = [3, 2];
+
+global custom_domain_range
+custom_domain_range = [-5, 5; -5, 5];
 
 % Himmelblau's function
 % (https://en.wikipedia.org/wiki/Test_functions_for_optimization)
-fun = @(x) (((x(1)+2)^2 + x(2) - 11)^2 + (x(1)+2 + x(2)^2 - 7)^2);
-x0 = [ 0.0, 1.0 ];                                    % punkt startowy
+fun = @(x) (((x(1))^2 + x(2) - 11)^2 + (x(1) + x(2)^2 - 7)^2);
+x0 = [ 0.8, 0.1 ];                                    % punkt startowy
 
-d1fun1 = @(x) (4*(x(1)+2)*((x(1)+2)^2 + x(2) - 11) + 2*(x(1)+2 + x(2)^2 - 7));
-d1fun2 = @(x) (2*((x(1)+2)^2 + x(2) - 11) + 4*x(2)*(x(1)+2 + x(2)^2 - 7));
-d2fun11 = @(x) (2*(4*(x(1)+2)^2 + 1 + 2*((x(1)+2)^2 + x(2) - 11)));
-d2fun22 = @(x) (2*(1 + 4*x(2)^2 + 2*(x(1)+2 + x(2)^2 - 7)));
-d2fun12 = @(x) (2*(2*(x(1)+2) + 2*x(2)));
+d1fun1 = @(x) (4*(x(1))*((x(1))^2 + x(2) - 11) + 2*(x(1) + x(2)^2 - 7));
+d1fun2 = @(x) (2*((x(1))^2 + x(2) - 11) + 4*x(2)*(x(1) + x(2)^2 - 7));
+d2fun11 = @(x) (2*(4*(x(1))^2 + 1 + 2*((x(1))^2 + x(2) - 11)));
+d2fun22 = @(x) (2*(1 + 4*x(2)^2 + 2*(x(1) + x(2)^2 - 7)));
+d2fun12 = @(x) (2*(2*(x(1)) + 2*x(2)));
 d2fun21 = d2fun12;
 
 
@@ -118,8 +121,8 @@ if (LSQNONLIN)
     % lsqnonlin() - NON-LINEAR LEAST-SQUARES
     figure
     options = optimoptions('lsqnonlin','Display','off','OutputFcn',@optim_out);
-    vfun = @(x)[ (x(1)+2)^2 + x(2) - 11;
-             x(1)+2 + x(2)^2 - 7 ];
+    vfun = @(x)[ (x(1))^2 + x(2) - 11;
+             x(1) + x(2)^2 - 7 ];
     [x,resnorm,residual,eflag,output] = lsqnonlin(vfun,x0,[],[],options);
     title('Rosenbrock - lsqnonlin() NONLINEAR LEAST-SQUARES');  
     if (PAUSE); pause; end
@@ -134,8 +137,8 @@ if (LSQNONLIN)
     
     % lsqnonlin() - NON-LINEAR LEAST-SQUARES + JACOBIAN
     figure
-    jac = @(x)[ 2*(x(1)+2), 1;
-                1,          2*x(2) ];
+    jac = @(x)[ 2*(x(1)), 1;
+                1,        2*x(2) ];
     vfunjac = @(x)deal(vfun(x),jac(x));
     options.SpecifyObjectiveGradient = true;
     [x,resnorm,residual,eflag,output] = lsqnonlin(vfunjac,x0,[],[],options);

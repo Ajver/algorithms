@@ -3,16 +3,25 @@ persistent ph
 global x0
 global xEND
 global fun
+global custom_domain_range
+
+if isempty(custom_domain_range)
+    % Użyj domyślnej wartości, jeśli zmienna nie została wcześniej ustawiona
+    domain_range = [-2, 2;  -1, 3];
+else
+    domain_range = custom_domain_range;
+end
+
 stop = false;
 switch state
     case 'init'
        newplot
-       xx = -2:.2:2;
-       yy = -1:.2:3;
+       xx = domain_range(1, 1):.2:domain_range(1, 2);
+       yy = domain_range(2, 1):.2:domain_range(2, 2);
        [xx,yy] = meshgrid(xx,yy);
        zz = zeros(size(xx));
-       for xi=1:length(xx)
-            for yi=1:length(yy)
+       for xi=1:size(xx, 1)
+            for yi=1:size(xx, 2)
                 x_coord = xx(xi, yi);
                 y_coord = yy(xi, yi);
                 zz(xi, yi) = fun([x_coord, y_coord]);
