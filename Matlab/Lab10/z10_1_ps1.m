@@ -17,6 +17,8 @@ set(groot,'DefaultFigureColormap',hsv(64))
 global a
 global x0
 global fun
+global xEND
+xEND = [1, 1];
 a = 100;
 fun = @(x)( a*(x(2) - x(1)^2)^2 + (1 - x(1))^2 );  % funkcja
 x0 = [ -1.9, 2 ];                                   % punkt startowy

@@ -1,7 +1,7 @@
 function stop = optim_out(x,~,state)
 persistent ph
-global a
 global x0
+global xEND
 global fun
 stop = false;
 switch state
@@ -10,7 +10,14 @@ switch state
        xx = -2:.2:2;
        yy = -1:.2:3;
        [xx,yy] = meshgrid(xx,yy);
-       zz = a*(yy-xx.^2).^2 + (1-xx).^2;
+       zz = zeros(size(xx));
+       for xi=1:length(xx)
+            for yi=1:length(yy)
+                x_coord = xx(xi, yi);
+                y_coord = yy(xi, yi);
+                zz(xi, yi) = fun([x_coord, y_coord]);
+            end
+       end
        % Set up the appropriate colormap
        % In this case, the colormap has been chosen to give the surf plot
        % a nice healthy banana color.
@@ -32,20 +39,20 @@ switch state
        if(1) % BLACK
           plot3(x0(1),x0(2),fun(x0),'ko','MarkerSize',15,'LineWidth',2);
           text(x0(1),x0(2)+0.5,267.62,'   Start','Color',[0 0 0]);
-          plot3(1,1,0,'ko','MarkerSize',15,'LineWidth',2);
-          text(0.8,1.4,0,'   Solution','Color',[0 0 0]);
+          plot3(xEND(1),xEND(2),fun(xEND),'ko','MarkerSize',15,'LineWidth',2);
+          text(xEND(1),xEND(2)+0.5,fun(xEND),'   Solution','Color',[0 0 0]);
        else % WHITE
           plot3(x0(1),x0(2),fun(x0),'wo','MarkerSize',15,'LineWidth',2);
           text(x0(1),x0(2)+0.5,fun(x0),'   Start','Color',[1 1 1]);
-          plot3(1,1,0,'wo','MarkerSize',15,'LineWidth',2);
-          text(0.8,1.4,0,'   Solution','Color',[1 1 1]);
+          plot3(xEND(1),xEND(2),fun(xEND),'wo','MarkerSize',15,'LineWidth',2);
+          text(xEND(1),xEND(2)+0.5,fun(xEND),'   Solution','Color',[1 1 1]);
        end    
        drawnow
 
     case 'iter'
         x1 = x(1);
         y1 = x(2);
-        z1 = a*(y1-x1.^2).^2+(1-x1).^2;
+        z1 = fun([x1, y1]);
         if(1) % RED CIRCLE
            ph = plot3(x1,y1,z1,'r.','MarkerSize',25);
         else  % YELLOW CIRCLE

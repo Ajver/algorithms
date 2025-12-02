@@ -1,26 +1,43 @@
-% Znajdowanie minimum funkcji "bananowej" Rosenbrocka f(x1,x2) różnymi metodami
-% f(x1,x2) = 100*(x2 - x1^2)^2 + (1-x1)^2
-% Minimum: f(1,1) = 0
-
-%  Sprawdź czy liczby wywołan funkcji i iteracji, podane w tabeli 10.1, 
-% sa poprawne: NIE
-% Analytic Gradient+Hessian 201 200
-
 clear all; close all;
 
 PAUSE = false;
+
+LSQNONLIN = false;  % True only when can be computed using LSE 
+
 results = {};
 k = 1;
 
 set(groot,'DefaultFigureColormap',hsv(64))
 
-global a
 global x0
 global fun
-% a = 100;  % Original
-a = 3;
-fun = @(x)( a*(x(2) - x(1)^2)^2 + (1 - x(1))^2 );  % funkcja
-x0 = [ -1.9, 2.0 ];                                    % punkt startowy
+global xEND
+offset = 2;  % move the func 
+xEND = [pi-offset, pi-offset];
+
+% Easom function
+% (https://en.wikipedia.org/wiki/Test_functions_for_optimization)
+fun = @(x) (-cos(x(1)+offset)*cos(x(2)+offset) .* exp(-((x(1)-pi+offset)^2 + (x(2)-pi+offset)^2)));
+x0 = [ 0.3, 1.0 ];                                    % punkt startowy
+
+% Helper vars for shorter notation:
+a = offset;
+b = pi - offset;
+d1fun1 = @(x) (exp(-((x(1)-b)^2 + (x(2)-b)^2)) .* ...
+    (sin(x(1)+a).*cos(x(2)+a) - 2*(-(x(1)-b)).*cos(x(1)+a).*cos(x(2)+a)));
+d1fun2 = @(x) (exp(-((x(1)-b)^2 + (x(2)-b)^2)) .* ...
+    (cos(x(1)+a).*sin(x(2)+a) - 2*(-(x(2)-b)).*cos(x(1)+a).*cos(x(2)+a)));
+d2fun11 = @(x) (exp(-((x(1)-b)^2 + (x(2)-b)^2)) .* cos(x(2)+a) .* ...
+    (cos(x(1)+a).*(3 - 4*(-(x(1)-b)).^2) + 4*(-(x(1)-b)).*sin(x(1)+a)));
+
+d2fun22 = @(x) (exp(-((x(1)-b)^2 + (x(2)-b)^2)) .* cos(x(1)+a) .* ...
+    (cos(x(2)+a).*(3 - 4*(-(x(2)-b)).^2) + 4*(-(x(2)-b)).*sin(x(2)+a)));
+
+d2fun12 = @(x) (exp(-((x(1)-b)^2 + (x(2)-b)^2)) .* ...
+    (sin(x(1)+a) - 2*(-(x(1)-b)).*cos(x(1)+a)) .* ...
+    (2*(-(x(2)-b)).*cos(x(2)+a) - sin(x(2)+a)));
+d2fun21 = d2fun12;
+
 
 % fminsearch() - SIMPLEX
 figure
@@ -72,8 +89,8 @@ disp(['Number of solver iterations for fminunc() STEEPEST-DESCENT UPDATE was ',n
 
 % fminunc() - ANALYTIC GRADIENT
 figure
-grad = @(x)[ -4*a*(x(2) - x(1)^2)*x(1) - 2*(1 - x(1)); ...   % first variable
-             2*a*(x(2) - x(1)^2)];                           % second variable
+grad = @(x)[ d1fun1(x); 
+             d1fun2(x) ];                           % second variable
 fungrad = @(x)deal(fun(x),grad(x));
 options = resetoptions(options,{'HessUpdate','MaxFunctionEvaluations'});
 options = optimoptions(options,'SpecifyObjectiveGradient',true,...
@@ -92,8 +109,8 @@ disp(['Number of solver iterations for fminunc() ANALYTIC GRADIENT was ',num2str
 
 % fminunc() - ANALYTIC GRADIENT & HESSIAN
 figure
-hess = @(x)[ 12*a*x(1)^2 - 4*a*x(2) + 2, -4*a*x(1);
-             4*a*x(1),      2*a ];
+hess = @(x)[ d2fun11(x), d2fun12(x);
+             d2fun21(x), d2fun22(x) ];
 fungradhess = @(x)deal(fun(x),grad(x),hess(x));
 options.HessianFcn = 'objective';
 [x,fval,eflag,output] = fminunc(fungradhess,x0,options);
@@ -108,39 +125,41 @@ k = k + 1;
 disp(['Number of function evaluations for fminunc() ANALYTIC GRAD & HESSIAN was ',num2str(Fcount)])
 disp(['Number of solver iterations for ANALYTIC HESSIAN was ',num2str(output.iterations)])
 
-% lsqnonlin() - NON-LINEAR LEAST-SQUARES
-figure
-options = optimoptions('lsqnonlin','Display','off','OutputFcn',@optim_out);
-vfun = @(x)[ sqrt(a)*(x(2) - x(1)^2), 1 - x(1)];
-[x,resnorm,residual,eflag,output] = lsqnonlin(vfun,x0,[],[],options);
-title('Rosenbrock - lsqnonlin() NONLINEAR LEAST-SQUARES');  
-if (PAUSE); pause; end
-results{k,1} = 'Non-linear Least-Squares';
-results{k,2} = 'lsqnonlin()';
-results{k,3} = output.funcCount;
-results{k,4} = output.iterations;
-Fcount = output.funcCount;
-k = k + 1;
-disp(['Number of function evaluations for lsqnonlin() NONLINEAR LEAST-SQUARES was ',num2str(Fcount)])
-disp(['Number of solver iterations for lsqnonlin() NONLINEAR LEAST-SQUARES was ',num2str(output.iterations)])
-
-% lsqnonlin() - NON-LINEAR LEAST-SQUARES + JACOBIAN
-figure
-jac = @(x)[-2*sqrt(a)*x(1), sqrt(a); ...
-                 -1, 0  ];
-vfunjac = @(x)deal(vfun(x),jac(x));
-options.SpecifyObjectiveGradient = true;
-[x,resnorm,residual,eflag,output] = lsqnonlin(vfunjac,x0,[],[],options);
-title('Rosenbrock - lsqnonlin() NONLIN-LS with JACOBIAN');  
-if (PAUSE); pause; end
-results{k,1} = 'Nonlinear LS + Analytic Jac.';
-results{k,2} = 'lsqnonlin()';
-results{k,3} = output.funcCount;
-results{k,4} = output.iterations;
-k = k + 1;
-Fcount = output.funcCount;
-disp(['Number of function evaluations for lsqnonlin() LS-NONLIN JACOBIAN was ',num2str(Fcount)])
-disp(['Number of solver iterations for lsqnonlin() LS-NONLIN JACOBIAN was ',num2str(output.iterations)])
+if (LSQNONLIN)
+    % lsqnonlin() - NON-LINEAR LEAST-SQUARES
+    figure
+    options = optimoptions('lsqnonlin','Display','off','OutputFcn',@optim_out);
+    vfun = @(x)[ sqrt(a)*(x(2) - x(1)^2), 1 - x(1)];
+    [x,resnorm,residual,eflag,output] = lsqnonlin(vfun,x0,[],[],options);
+    title('Rosenbrock - lsqnonlin() NONLINEAR LEAST-SQUARES');  
+    if (PAUSE); pause; end
+    results{k,1} = 'Non-linear Least-Squares';
+    results{k,2} = 'lsqnonlin()';
+    results{k,3} = output.funcCount;
+    results{k,4} = output.iterations;
+    Fcount = output.funcCount;
+    k = k + 1;
+    disp(['Number of function evaluations for lsqnonlin() NONLINEAR LEAST-SQUARES was ',num2str(Fcount)])
+    disp(['Number of solver iterations for lsqnonlin() NONLINEAR LEAST-SQUARES was ',num2str(output.iterations)])
+    
+    % lsqnonlin() - NON-LINEAR LEAST-SQUARES + JACOBIAN
+    figure
+    jac = @(x)[-2*sqrt(a)*x(1), sqrt(a); ...
+                     -1, 0  ];
+    vfunjac = @(x)deal(vfun(x),jac(x));
+    options.SpecifyObjectiveGradient = true;
+    [x,resnorm,residual,eflag,output] = lsqnonlin(vfunjac,x0,[],[],options);
+    title('Rosenbrock - lsqnonlin() NONLIN-LS with JACOBIAN');  
+    if (PAUSE); pause; end
+    results{k,1} = 'Nonlinear LS + Analytic Jac.';
+    results{k,2} = 'lsqnonlin()';
+    results{k,3} = output.funcCount;
+    results{k,4} = output.iterations;
+    k = k + 1;
+    Fcount = output.funcCount;
+    disp(['Number of function evaluations for lsqnonlin() LS-NONLIN JACOBIAN was ',num2str(Fcount)])
+    disp(['Number of solver iterations for lsqnonlin() LS-NONLIN JACOBIAN was ',num2str(output.iterations)])
+end
 
 set(groot,'DefaultFigureColormap',parula(64))
 
