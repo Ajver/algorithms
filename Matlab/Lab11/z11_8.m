@@ -11,7 +11,7 @@ tminmax = [0, 4];
 x0 = [1; 0];
 
 tic;
-[t, y] = odeEuler(x, tminmax, x0, 1e6);
+[t, y] = odeRK4(x, tminmax, x0, 1e2);
 toc
 
 subplot(2, 1, 1);
