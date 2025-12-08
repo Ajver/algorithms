@@ -37,6 +37,7 @@ Fcount = output.funcCount;
 k = k + 1;
 disp(['Number of function evaluations for fminsearch() SIMPLEX was ',num2str(Fcount)])
 disp(['Number of solver iterations for fminsearch() SIMPLEX was ',num2str(output.iterations)])
+disp(['min point found: ', num2str(x(1)), ', ', num2str(x(2))]);
 
 % fminunc() - QUASI-NEWTON
 figure
@@ -53,6 +54,7 @@ Fcount = output.funcCount;
 k = k + 1;
 disp(['Number of function evaluations for fminunc() QUASI-NEWTON was ',num2str(Fcount)])
 disp(['Number of solver iterations for fminunc() QUASI-NEWTON was ',num2str(output.iterations)])
+disp(['min point found: ', num2str(x(1)), ', ', num2str(x(2))]);
 
 % fminunc() - STEEPEST-DESCENT
 figure
@@ -69,6 +71,7 @@ Fcount = output.funcCount;
 k = k + 1;
 disp(['Number of function evaluations for fminunc() STEEPEST-DESCENT was ',num2str(Fcount)])
 disp(['Number of solver iterations for fminunc() STEEPEST-DESCENT UPDATE was ',num2str(output.iterations)])
+disp(['min point found: ', num2str(x(1)), ', ', num2str(x(2))]);
 
 % fminunc() - ANALYTIC GRADIENT
 figure
@@ -89,6 +92,7 @@ Fcount = output.funcCount;
 k = k + 1;
 disp(['Number of function evaluations for fminunc() ANALYTIC GRADIENT was ',num2str(Fcount)])
 disp(['Number of solver iterations for fminunc() ANALYTIC GRADIENT was ',num2str(output.iterations)])
+disp(['min point found: ', num2str(x(1)), ', ', num2str(x(2))]);
 
 % fminunc() - ANALYTIC GRADIENT & HESSIAN
 figure
@@ -107,6 +111,7 @@ Fcount = output.funcCount;
 k = k + 1;
 disp(['Number of function evaluations for fminunc() ANALYTIC GRAD & HESSIAN was ',num2str(Fcount)])
 disp(['Number of solver iterations for ANALYTIC HESSIAN was ',num2str(output.iterations)])
+disp(['min point found: ', num2str(x(1)), ', ', num2str(x(2))]);
 
 % lsqnonlin() - NON-LINEAR LEAST-SQUARES
 figure
@@ -123,6 +128,7 @@ Fcount = output.funcCount;
 k = k + 1;
 disp(['Number of function evaluations for lsqnonlin() NONLINEAR LEAST-SQUARES was ',num2str(Fcount)])
 disp(['Number of solver iterations for lsqnonlin() NONLINEAR LEAST-SQUARES was ',num2str(output.iterations)])
+disp(['min point found: ', num2str(x(1)), ', ', num2str(x(2))]);
 
 % lsqnonlin() - NON-LINEAR LEAST-SQUARES + JACOBIAN
 figure
@@ -141,6 +147,7 @@ k = k + 1;
 Fcount = output.funcCount;
 disp(['Number of function evaluations for lsqnonlin() LS-NONLIN JACOBIAN was ',num2str(Fcount)])
 disp(['Number of solver iterations for lsqnonlin() LS-NONLIN JACOBIAN was ',num2str(output.iterations)])
+disp(['min point found: ', num2str(x(1)), ', ', num2str(x(2))]);
 
 set(groot,'DefaultFigureColormap',parula(64))
 
