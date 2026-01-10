@@ -1,3 +1,5 @@
+// gcc z13_2.c -o z13_2.o -lm && ./z13_2.o
+
 #include <stdio.h>
 #include <math.h>
 
