@@ -14,13 +14,13 @@ methods = [
 ];
 
 
-% for k=1:length(methods)
-%     method = methods(k);
-%     y = rand_multadd(N, seed, method);
-%     figure;
-%     hist(y);
-%     title(method + " N = " + num2str(N));
-% end
+for k=1:length(methods)
+    method = methods(k);
+    y = rand_multadd(N, seed, method);
+    figure;
+    hist(y);
+    title(method + " N = " + num2str(N));
+end
 
 
 
