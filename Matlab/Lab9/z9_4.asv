@@ -4,7 +4,7 @@ clear all; close all;
 it = 30;
 
 %%
-nachylenie_okolo = 10;
+nachylenie_okolo = 80;
 
 switch nachylenie_okolo
     case 10
@@ -26,11 +26,8 @@ z2 = (-B + sqrt(delta)) / (2*A);
 z = z2
 kat_paraboli_w_z = rad2deg(atan(fp(z)))
 
-
-TOL = 0.001;
 cs = nonlinsolvers( f, fp, a, b, 'sieczne', it);
 moment_zbierznosci = min(find(abs(cs - z) <= TOL));
-
 
 %%
 x = -10 : 0.01 : 10;
@@ -48,11 +45,11 @@ figure;
     
     plot( xlim, [z, z], "--" );
 
-    plot([moment_zbierznosci, moment_zbierznosci], ylim, "--")
+    plot( [])
 
 xlabel('iter'); title('c(iter)'); ylabel("wyznaczone miejsce zerowe")
 grid on, legend("Sieczne", "zero analityczne = " + num2str(z), "moment zbierzności");
 
 
-fprintf('Sieczne it: %d, result: %f, error: %f\n', moment_zbierznosci, cs(end), cs(end) - z);
+fprintf('Sieczne it: %d, result: %f, error: %f\n', , cs(end), cs(end) - z);
 
