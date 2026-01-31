@@ -13,12 +13,12 @@ legend(["x noisy", "x clean"]);
 d1_true = cos(t);
 d2_true = -sin(t);
 
-k_range = 2:2:600;
+k_range = 2:2:250;
 
 h = 2*pi/N;
 
 for k=k_range
-    d1 = (x(1+k:N)-x(1:N-k))/(h*k);
+    d1 = (x(1+k:N)-x(1:N-k))/(2*h*k);
     d1_MAE(k/2) = mean(abs(d1 - d1_true(1+k/2:N-k/2)));
     
     d2 = (x(1:N-2*k) -2*x(1+k:N-k) + x(1+2*k:N))/((h*k)^2);
@@ -28,10 +28,13 @@ end
 [min_MAE1, best_MAE1_idx] = min(d1_MAE);
 [min_MAE2, best_MAE2_idx] = min(d2_MAE);
 % *2 because MAE arrays are indexed using every second k
-best_k1 = best_MAE1_idx;
-best_k2 = best_MAE2_idx;
+best_k1 = best_MAE1_idx*2;
+best_k2 = best_MAE2_idx*2;
+fprintf("best k for d1 = %d\n", best_k1);
+fprintf("best k for d2 = %d\n", best_k2);
 
 figure;
+subplot(2, 1, 1);
 plot(k_range, d1_MAE);
 yscale("log");
 title("MAE for d1");
@@ -39,7 +42,8 @@ xlabel("k");
 ylabel("avg |num x' - true x'|");
 legend("best k = " + num2str(best_k1));
 
-figure;
+subplot(2, 1, 2);
+
 plot(k_range, d2_MAE);
 yscale("log");
 title("MAE for d2");
@@ -48,24 +52,20 @@ ylabel("avg |num x'' - true x''|");
 legend("best k = " + num2str(best_k2));
 
 
-fprintf("best k for d1 = %d\n", best_k1);
-fprintf("best k for d2 = %d\n", best_k2);
-
-
-
 figure;
 subplot(2, 1, 1);
 k = best_k1;
 d1 = (x(1+k:N)-x(1:N-k))/(h*k);
-plot(t(1+best_k1/2:N-best_k1/2), d1); hold on;
-plot(t(1+best_k1/2:N-best_k1/2), d1_true(1+best_k1/2:N-best_k1/2));
+plot(t(1+k/2:N-k/2), d1); hold on;
+plot(t, d1_true);
+titl
 legend(["num dx/dt", "true dx/dt"]);
 
 subplot(2, 1, 2);
 k = best_k2;
 d2 = (x(1:N-2*k) -2*x(1+k:N-k) + x(1+2*k:N))/((h*k)^2);
-plot(t(1+k:N-best_k2), d2); hold on;
-plot(t(1+best_k2:N-best_k2), d2_true(1+best_k2:N-best_k2)); 
+plot(t(1+k:N-k), d2); hold on;
+plot(t, d2_true); 
 legend(["num d^2x/dt^2", "true d^2x/dt^2"]);
 
 M = 1;

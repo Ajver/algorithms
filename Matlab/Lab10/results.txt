@@ -1,3 +1,5 @@
+Wszystko zebrane w jednej tabeli na końcu tego pliku!!!
+
 
 x0 = [ -1.9, 2 ];
 
@@ -72,7 +74,7 @@ Nonlinear LS + Analytic Jac.      lsqnonlin()                    11             
 
 
                                                                         inne wart.
-                                  [-1.9, 2]    [0.5, 2]   [1.2, 0.5]    [-1.9, 2]
+                punkt startowy->  [-1.9, 2]    [0.5, 2]   [1.2, 0.5]    [-1.9, 2]
 Nazwa metody                      #fn #iter   #fn #iter   #fn #iter     #fn #iter
 ---------------------------------------------------------------------------------------
 Steepest-Descent                  600    45   600    51   600    57     600    80
