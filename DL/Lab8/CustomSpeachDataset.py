@@ -12,8 +12,9 @@ class CustomSpeachDataset(Dataset):
         self.dataset_dir = dataset_dir
 
         labels_num_samples_path = self.dataset_dir / "labels_num_samples.csv"
-        self._label_counts = pd.read_csv(labels_num_samples_path)
-        self.LABEL_NAMES = self._label_counts["label"].to_numpy(dtype=str)
+        df = pd.read_csv(labels_num_samples_path)
+        self.LABEL_NAMES = df["label"].to_numpy(dtype=str)
+        self.label_counts = df["num_samples"].to_numpy(dtype=int)
 
         self._filepaths = []
         self.y = []
