@@ -4,3 +4,5 @@ venv/
 
 *.pth
 runs/
+
+__pycache__
