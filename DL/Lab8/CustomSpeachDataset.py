@@ -8,9 +8,10 @@ from torch.utils.data import Dataset
 
 
 class CustomSpeachDataset(Dataset):
-    def __init__(self, dataset_dir: Path, preload: bool = False) -> None:
+    def __init__(self, dataset_dir: Path, preload: bool = False, device: str = "cpu") -> None:
         self.dataset_dir = dataset_dir
         self.preload = preload
+        self.device = device
 
         if self.preload:
             print("Preloading dataset from disk...")
@@ -33,14 +34,18 @@ class CustomSpeachDataset(Dataset):
                 self._filepaths.append(file)
                 self.y.append(np.argwhere(self.LABEL_NAMES == label_folder.name).item())
 
-        self.X = torch.stack(self.X)
+        if self.preload:
+            self.X = torch.stack(self.X)
         self._filepaths = np.array(self._filepaths, dtype=str)
         self.y = torch.tensor(self.y, dtype=torch.long)
 
         self.best_val_loss = None
 
     def to(self, device: str|torch.device) -> None:
-        self.X = self.X.to(device)
+        self.device = device
+        if self.preload:
+            self.X = self.X.to(device)
+
         self.y = self.y.to(device)
 
     def __len__(self) -> int:
@@ -65,7 +70,9 @@ class CustomSpeachDataset(Dataset):
 
     def _load_file(self, filepath: str|Path) -> torch.Tensor:
         samples, _ = librosa.load(filepath, sr=8_000)
-        x = torch.tensor(samples).reshape(1, 8000)
+        x = torch.tensor(samples)
+        x = x.reshape(1, 8000)
+        x = x.to(self.device)
         return x
 
 # tests
