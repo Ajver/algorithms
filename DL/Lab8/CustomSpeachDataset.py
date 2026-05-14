@@ -37,6 +37,12 @@ class CustomSpeachDataset(Dataset):
         self._filepaths = np.array(self._filepaths, dtype=str)
         self.y = torch.tensor(self.y, dtype=torch.long)
 
+        self.best_val_loss = None
+
+    def to(self, device: str|torch.device) -> None:
+        self.X = self.X.to(device)
+        self.y = self.y.to(device)
+
     def __len__(self) -> int:
         return self._filepaths.shape[0]
 
