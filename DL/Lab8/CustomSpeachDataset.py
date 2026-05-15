@@ -28,11 +28,13 @@ class CustomSpeachDataset(Dataset):
             if not label_folder.is_dir():
                 continue
 
+            y = np.argwhere(self.LABEL_NAMES == label_folder.name).item()
+
             for file in label_folder.iterdir():
                 if self.preload:
                     self.X.append(self._load_file(file))
                 self._filepaths.append(file)
-                self.y.append(np.argwhere(self.LABEL_NAMES == label_folder.name).item())
+                self.y.append(y)
 
         if self.preload:
             self.X = torch.stack(self.X)
