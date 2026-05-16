@@ -4,14 +4,16 @@ import librosa
 import numpy as np
 import pandas as pd
 import torch
+from torch import nn
 from torch.utils.data import Dataset
 
 
 class CustomSpeachDataset(Dataset):
-    def __init__(self, dataset_dir: Path, preload: bool = False, device: str = "cpu") -> None:
+    def __init__(self, dataset_dir: Path, preload: bool = False, device: str = "cpu", data_transforms: nn.Sequential|None = None) -> None:
         self.dataset_dir = dataset_dir
         self.preload = preload
         self.device = device
+        self.data_transforms = data_transforms
 
         if self.preload:
             print("Preloading dataset from disk...")
@@ -50,6 +52,9 @@ class CustomSpeachDataset(Dataset):
 
         self.y = self.y.to(device)
 
+        if self.data_transforms:
+            self.data_transforms.to(device)
+
     def __len__(self) -> int:
         return self._filepaths.shape[0]
 
@@ -58,16 +63,22 @@ class CustomSpeachDataset(Dataset):
 
         if self.preload:
             x = self.X[idx]
+            if self.data_transforms:
+                x = self.data_transforms(x)
             return x, y
 
         filepath = self._filepaths[idx]
 
         if isinstance(filepath, str):
             x = self._load_file(filepath)
+            if self.data_transforms:
+                x = self.data_transforms(x)
             return x, y
         else:
             # idx is a list of indices
             X = torch.stack([self._load_file(one_file) for one_file in filepath])
+            if self.data_transforms:
+                X = self.data_transforms(X)
             return X, y
 
     def _load_file(self, filepath: str|Path) -> torch.Tensor:
