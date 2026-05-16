@@ -15,10 +15,11 @@ class Ensemble(nn.Module):
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
         models = []
-        for fold in range(5):
-            model = SpeachClassifierModel(self.model_params["dropout_rate"])
-            model.load_state_dict(torch.load(models_dir/f"fold{fold}.pth", map_location=device))
-            models.append(model)
+        for model_path in models_dir.iterdir():
+            if model_path.name.startswith("fold"):
+                model = SpeachClassifierModel(self.model_params["dropout_rate"])
+                model.load_state_dict(torch.load(model_path, map_location=device))
+                models.append(model)
 
         self.models = nn.ModuleList(models)
 
