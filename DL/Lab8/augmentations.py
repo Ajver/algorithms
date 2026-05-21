@@ -1,72 +1,76 @@
 import torch
 import torch.nn as nn
 from torchvision import transforms
-import torchaudio
+from torchvision.transforms import Compose
+import torchaudio.functional as F
 
 
-class AddRandomNoise(nn.Module):
+class Gain(nn.Module):
+    def __init__(self, min_gain: float, max_gain: float):
+        super().__init__()
+        self.min_gain = min_gain
+        self.max_gain = max_gain
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        gain = torch.empty(1, device=x.device, dtype=x.dtype).uniform_(self.min_gain, self.max_gain)
+        return x * gain
+
+
+class Noise(nn.Module):
     def __init__(self, min_snr: float, max_snr: float):
         super().__init__()
         self.min_snr = min_snr
         self.max_snr = max_snr
 
-    def forward(self, waveform: torch.Tensor) -> torch.Tensor:
-        noise_level = torch.empty(1).uniform_(self.min_snr, self.max_snr).item()
-        noise = torch.randn_like(waveform) * noise_level
-        return waveform + noise
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        signal_power = torch.mean(x ** 2)
+        snr = torch.empty(1, device=x.device, dtype=x.dtype).uniform_(self.min_snr, self.max_snr)
+
+        noise_power = signal_power * snr
+        noise = torch.randn_like(x) * torch.sqrt(noise_power)
+        return x + noise
 
 
-class RandomSpeedPitchShift(nn.Module):
+class PitchShift(nn.Module):
     def __init__(self, sample_rate: int, min_steps: int, max_steps: int):
         super().__init__()
         self.sample_rate = sample_rate
         self.min_steps = min_steps
         self.max_steps = max_steps
 
-        # Pre-build one resampler per possible n_steps — kernel computed once here,
-        # cached as a buffer, moved to GPU with .to(device) / .cuda()
-        self.resamplers = nn.ModuleDict()
-        for n_steps in range(min_steps, max_steps + 1):
-            if n_steps == 0:
-                continue
-            factor = 2.0 ** (n_steps / 12.0)
-            orig_freq = round(sample_rate * factor)   # round, not int-truncate
-            self.resamplers[str(n_steps)] = torchaudio.transforms.Resample(
-                orig_freq=orig_freq,
-                new_freq=sample_rate,
-            )
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # Determine the target steps (must be an integer for pitch shifting)
+        # We use torch.randint to get a separate target per forward pass
+        steps = torch.randint(self.min_steps, self.max_steps + 1, (1,)).item()
 
-    def forward(self, waveform: torch.Tensor) -> torch.Tensor:
-        print("START")
-        n_steps = torch.randint(self.min_steps, self.max_steps + 1, (1,)).item()
-        if n_steps == 0:
-            print("early exit")
-            return waveform
+        if steps == 0:
+            return x
 
-        orig_len = waveform.size(-1)
-        augmented = self.resamplers[str(n_steps)](waveform)  # kernel already on GPU
-
-        resampled_len = augmented.size(-1)
-        print(f"{augmented.shape=}")
-
-        diff = orig_len - resampled_len
-        if diff > 0:
-            pad_left = diff // 2
-            augmented = nn.functional.pad(
-                augmented, (pad_left, diff - pad_left), value=0.0
-            )
-        elif diff < 0:
-            crop_left = (-diff) // 2
-            augmented = augmented[..., crop_left : crop_left + orig_len]
-
-        return augmented
+        return F.pitch_shift(x, self.sample_rate, steps)
 
 
-audio_transform = nn.Sequential(
-    transforms.RandomApply([
-        AddRandomNoise(min_snr=0.001, max_snr=0.008)
-    ], p=0.5),
-    transforms.RandomApply([
-        RandomSpeedPitchShift(sample_rate=8000, min_steps=-3, max_steps=3)
-    ], p=0.5),
-)
+class FadeIn(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        fade_ramp = torch.linspace(0.0, 1.0, steps=x.shape[-1], device=x.device)
+        return x * fade_ramp
+
+
+class FadeOut(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        fade_ramp = torch.linspace(1.0, 0.0, steps=x.shape[-1], device=x.device)
+        return x * fade_ramp
+
+
+audio_transform = Compose([
+    transforms.RandomApply([Gain(min_gain=0.5, max_gain=1.5)], p=0.5),
+    transforms.RandomApply([Noise(min_snr=0.001, max_snr=0.010)], p=0.2),
+    transforms.RandomApply([PitchShift(sample_rate=8000, min_steps=-4, max_steps=4)], p=0.3),
+    transforms.RandomApply([FadeIn()], p=0.3),
+    transforms.RandomApply([FadeIn()], p=0.3),
+])
