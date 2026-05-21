@@ -2,7 +2,7 @@ from torch import nn
 
 
 class SpeachClassifierModel(nn.Module):
-    def __init__(self, dropout_rate: float):
+    def __init__(self, dropout_rate: float, output_classes: int = 10):
         super().__init__()
 
         self.model = nn.Sequential(
@@ -40,7 +40,7 @@ class SpeachClassifierModel(nn.Module):
             nn.ReLU(),
             nn.Dropout(dropout_rate),
 
-            nn.Linear(128, 10),
+            nn.Linear(128, output_classes),
         )
 
     def forward(self, x):
