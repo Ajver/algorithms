@@ -4,12 +4,12 @@ import librosa
 import numpy as np
 import pandas as pd
 import torch
-from torch import nn
 from torch.utils.data import Dataset
+from torchvision.transforms import Compose
 
 
 class CustomSpeachDataset(Dataset):
-    def __init__(self, dataset_dir: Path, preload: bool = False, device: str = "cpu", data_transforms: nn.Sequential|None = None) -> None:
+    def __init__(self, dataset_dir: Path, preload: bool = False, device: str = "cpu", data_transforms: Compose|None = None) -> None:
         self.dataset_dir = dataset_dir
         self.preload = preload
         self.device = device
@@ -52,8 +52,9 @@ class CustomSpeachDataset(Dataset):
 
         self.y = self.y.to(device)
 
-        if self.data_transforms:
-            self.data_transforms.to(device)
+        if self.data_transforms is not None:
+            for t in self.data_transforms.transforms:
+                t.to(device)
 
     def __len__(self) -> int:
         return self._filepaths.shape[0]

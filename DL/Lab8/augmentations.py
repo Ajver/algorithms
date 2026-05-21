@@ -70,7 +70,7 @@ class FadeOut(nn.Module):
 audio_transform = Compose([
     transforms.RandomApply([Gain(min_gain=0.5, max_gain=1.5)], p=0.5),
     transforms.RandomApply([Noise(min_snr=0.001, max_snr=0.010)], p=0.2),
-    transforms.RandomApply([PitchShift(sample_rate=8000, min_steps=-4, max_steps=4)], p=0.3),
+    # transforms.RandomApply([PitchShift(sample_rate=8000, min_steps=-4, max_steps=4)], p=0.3),
     transforms.RandomApply([FadeIn()], p=0.3),
-    transforms.RandomApply([FadeIn()], p=0.3),
+    transforms.RandomApply([FadeOut()], p=0.3),
 ])
