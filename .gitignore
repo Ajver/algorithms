@@ -4,5 +4,7 @@ venv/
 
 *.pth
 runs/
+lightning_logs/
+*.ckpt
 
 __pycache__
