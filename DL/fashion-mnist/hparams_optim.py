@@ -11,6 +11,8 @@ from Datamodule import Datamodule
 OUT_FEATURES = 10
 
 datamodule = Datamodule()
+datamodule.prepare_data()
+datamodule.setup("fit")
 
 
 def objective(trial):

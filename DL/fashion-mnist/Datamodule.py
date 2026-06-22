@@ -24,9 +24,6 @@ class Datamodule(pl.LightningDataModule):
         # For stratified k-fold split
         self.y_train_val = None
 
-        self.prepare_data()
-        self.setup("fit")
-
     def prepare_data(self):
         dataset_path = kagglehub.dataset_download("zalando-research/fashionmnist")
         self.dataset_path = Path(dataset_path)
