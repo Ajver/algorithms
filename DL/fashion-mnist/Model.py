@@ -2,38 +2,48 @@ import pytorch_lightning as pl
 import torch
 import torchmetrics
 import torchvision
+from pydantic import BaseModel
 from torch import nn
 
 
+class ModelParams(BaseModel):
+    dropout_rate: float
+    n_hidden: int
+    n_width: int
+    lr: float
+
+
 class Model(pl.LightningModule):
-    def __init__(self, fold: int, dropout_rate: float, n_hidden: int, n_width: int, out_features: int, lr: float):
+    def __init__(self, fold: int, out_features: int, model_params: ModelParams):
         super().__init__()
-        self.save_hyperparameters()
+
+        self.fold = fold
+        self.model_params = model_params
 
         self.conv = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=5, stride=1, padding=2),
             nn.BatchNorm2d(16),
             nn.ReLU(),
             nn.MaxPool2d(2),
-            nn.Dropout(dropout_rate),
+            nn.Dropout(model_params.dropout_rate),
             # 14x14
 
             nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.MaxPool2d(2),
-            nn.Dropout(dropout_rate),
+            nn.Dropout(model_params.dropout_rate),
             # 7x7
         )
         linear = [
             nn.Flatten(),
-            nn.Linear(32 * 7*7, n_width),
+            nn.Linear(32 * 7*7, model_params.n_width),
             nn.ReLU(),
         ]
-        for i in range(n_hidden):
-            linear.append(nn.Linear(n_width, n_width))
+        for i in range(model_params.n_hidden):
+            linear.append(nn.Linear(model_params.n_width, model_params.n_width))
             linear.append(nn.ReLU())
-        linear.append(nn.Linear(n_width, out_features))
+        linear.append(nn.Linear(model_params.n_width, out_features))
         self.fully_connected = nn.Sequential(*linear)
 
         self.model = nn.Sequential(
@@ -87,4 +97,4 @@ class Model(pl.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)
+        return torch.optim.Adam(self.parameters(), lr=self.model_params.lr)

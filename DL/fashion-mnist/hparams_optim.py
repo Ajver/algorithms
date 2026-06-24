@@ -5,7 +5,7 @@ from pytorch_lightning.loggers.tensorboard import TensorBoardLogger
 from pytorch_lightning.trainer.trainer import Trainer
 import optuna
 
-from Model import Model
+from Model import Model, ModelParams
 from Datamodule import Datamodule
 
 OUT_FEATURES = 10
@@ -23,16 +23,18 @@ def objective(trial):
         default_hp_metric=False
     )
 
-    dropout_rate = trial.suggest_float("dropout_rate", 0, 0.4)
-    n_hidden = trial.suggest_int("n_hidden", 1, 5)
-    n_width = trial.suggest_categorical("n_width", [16, 32, 64, 128, 256])
-    lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
+    model_params = ModelParams(
+        dropout_rate = trial.suggest_float("dropout_rate", 0, 0.4),
+        n_hidden = trial.suggest_int("n_hidden", 1, 5),
+        n_width = trial.suggest_categorical("n_width", [16, 32, 64, 128, 256]),
+        lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True),
+    )
 
     total_score = 0.0
     for fold, train_loader, val_loader in datamodule.cv_train_val_splits():
         print(f"Starting new training {trial.number=} {fold=}")
 
-        model = Model(fold, dropout_rate, n_hidden, n_width, OUT_FEATURES, lr)
+        model = Model(fold, OUT_FEATURES, model_params)
         trainer = Trainer(
             max_epochs=5,
             devices=1,
