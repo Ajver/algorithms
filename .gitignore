@@ -6,5 +6,6 @@ venv/
 runs/
 lightning_logs/
 *.ckpt
+**/checkpoints/*
 
 __pycache__
