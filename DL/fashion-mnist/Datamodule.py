@@ -4,7 +4,7 @@ import kagglehub
 import pandas as pd
 import pytorch_lightning as pl
 import torch
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, train_test_split
 from torch.utils.data import DataLoader, TensorDataset
 from torch.utils.data.dataset import Subset
 
@@ -19,6 +19,7 @@ class Datamodule(pl.LightningDataModule):
         self.dataset_path = None
 
         self.train_val_dataset = None
+        self.cal_dataset = None
         self.test_dataset = None
 
         # For stratified k-fold split
@@ -32,13 +33,18 @@ class Datamodule(pl.LightningDataModule):
         train_df = pd.read_csv(self.dataset_path / "fashion-mnist_train.csv")
         test_df = pd.read_csv(self.dataset_path / "fashion-mnist_test.csv")
 
-        X_train_val = _df_to_X(train_df)
+        X_train_val_cal = _df_to_X(train_df)
         X_test = _df_to_X(test_df)
 
-        self.y_train_val = torch.tensor(train_df["label"].values, dtype=torch.long)
+        y_train_val_cal = torch.tensor(train_df["label"].values, dtype=torch.long)
         y_test = torch.tensor(test_df["label"].values, dtype=torch.long)
 
+        X_train_val, X_cal, self.y_train_val, y_cal = train_test_split(X_train_val_cal, y_train_val_cal,
+                                                                            test_size=0.2, random_state=42,
+                                                                            stratify=y_train_val_cal)
+
         self.train_val_dataset = TensorDataset(X_train_val, self.y_train_val)
+        self.cal_dataset = TensorDataset(X_cal, y_cal)
         self.test_dataset = TensorDataset(X_test, y_test)
 
     def cv_train_val_splits(self) -> list[tuple[int, DataLoader, DataLoader]]:
@@ -51,9 +57,11 @@ class Datamodule(pl.LightningDataModule):
 
         return to_return
 
+    def cal_dataloader(self) -> DataLoader:
+        return DataLoader(self.cal_dataset, batch_size=512, shuffle=True)
+
     def test_dataloader(self) -> DataLoader:
         return DataLoader(self.test_dataset, batch_size=512, shuffle=False)
-
 
 def _df_to_X(df: pd.DataFrame) -> torch.Tensor:
     X = df.drop("label", axis=1).to_numpy(dtype=float)
