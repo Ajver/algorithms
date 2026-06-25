@@ -25,27 +25,34 @@ class Datamodule(pl.LightningDataModule):
         # For stratified k-fold split
         self.y_train_val = None
 
+        self.X_test = None
+        self.y_test = None
+
     def prepare_data(self):
         dataset_path = kagglehub.dataset_download("zalando-research/fashionmnist")
         self.dataset_path = Path(dataset_path)
 
     def setup(self, stage):
-        train_df = pd.read_csv(self.dataset_path / "fashion-mnist_train.csv")
-        test_df = pd.read_csv(self.dataset_path / "fashion-mnist_test.csv")
+        if stage == "fit":
+            train_df = pd.read_csv(self.dataset_path / "fashion-mnist_train.csv")
 
-        X_train_val_cal = _df_to_X(train_df)
-        X_test = _df_to_X(test_df)
+            X_train_val_cal = _df_to_X(train_df)
 
-        y_train_val_cal = torch.tensor(train_df["label"].values, dtype=torch.long)
-        y_test = torch.tensor(test_df["label"].values, dtype=torch.long)
+            y_train_val_cal = torch.tensor(train_df["label"].values, dtype=torch.long)
 
-        X_train_val, X_cal, self.y_train_val, y_cal = train_test_split(X_train_val_cal, y_train_val_cal,
-                                                                            test_size=0.2, random_state=42,
-                                                                            stratify=y_train_val_cal)
+            X_train_val, X_cal, self.y_train_val, y_cal = train_test_split(X_train_val_cal, y_train_val_cal,
+                                                                                test_size=0.2, random_state=42,
+                                                                                stratify=y_train_val_cal)
 
-        self.train_val_dataset = TensorDataset(X_train_val, self.y_train_val)
-        self.cal_dataset = TensorDataset(X_cal, y_cal)
-        self.test_dataset = TensorDataset(X_test, y_test)
+            self.train_val_dataset = TensorDataset(X_train_val, self.y_train_val)
+            self.cal_dataset = TensorDataset(X_cal, y_cal)
+
+        elif stage == "test":
+            test_df = pd.read_csv(self.dataset_path / "fashion-mnist_test.csv")
+            self.X_test = _df_to_X(test_df)
+            self.y_test = torch.tensor(test_df["label"].values, dtype=torch.long)
+
+            self.test_dataset = TensorDataset(self.X_test, self.y_test)
 
     def cv_train_val_splits(self) -> list[tuple[int, DataLoader, DataLoader]]:
         to_return = []
