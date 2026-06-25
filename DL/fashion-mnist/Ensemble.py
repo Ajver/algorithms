@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 
 import torch
-from statsmodels.tsa.base import prediction
 from torch import nn
 
 from Model import Model, ModelParams
