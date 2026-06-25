@@ -68,9 +68,9 @@ class Model(pl.LightningModule):
             "train_accuracy": accuracy,
         }, on_step=False, on_epoch=True, prog_bar=True)
 
-        if batch_idx % 100 == 0:
-            grid = torchvision.utils.make_grid(x[:64])
-            self.logger.experiment.add_image("images", grid, self.global_step)
+        # if batch_idx % 100 == 0:
+        #     grid = torchvision.utils.make_grid(x[:64])
+        #     self.logger.experiment.add_image("images", grid, self.global_step)
 
         return loss
 
