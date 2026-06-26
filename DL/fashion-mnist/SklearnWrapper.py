@@ -5,12 +5,13 @@ from Ensemble import Ensemble
 
 
 class SklearnWrapper(ClassifierMixin, BaseEstimator):
-    def __init__(self, ensemble: Ensemble):
+    def __init__(self, ensemble: Ensemble, move_device: bool = True):
         self.ensemble = ensemble
         self.ensemble.eval()
 
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.ensemble.to(device)
+        if move_device:
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            self.ensemble.to(device)
 
     def fit(self, X, y):
         raise NotImplementedError()
