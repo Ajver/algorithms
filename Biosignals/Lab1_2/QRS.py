@@ -60,8 +60,10 @@ def detect_r_peaks(ecg, fs):
     diff_integrated = differentiate(integrated)
     zero_crossings = np.where((diff_integrated[:-1] > 0) & (diff_integrated[1:] < 0))[0]
 
-    SPKI = 0.001
-    NPKI = 0.0001
+    # Inicjalizacja progów na podstawie pierwszych sekund scałkowanego sygnału
+    init_chunk = integrated[: min(len(integrated), fs * 2)]
+    SPKI = np.max(init_chunk) * 0.35 if len(init_chunk) > 0 else 0.1
+    NPKI = SPKI * 0.1
     THRESHOLD_I1 = NPKI + 0.25 * (SPKI-NPKI)
     THRESHOLD_I2 = 0.5 * THRESHOLD_I1
     print(f"{THRESHOLD_I1=}, {THRESHOLD_I2=}")
