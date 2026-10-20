@@ -39,6 +39,7 @@ def run_game(
     risky: bool = False,
     agent_knows_gold: bool = True,
     verbose: bool = True,
+    pits_proba: float = 0.15,
 ) -> GameResult:
     """Rozgrywa jedną grę agenta w świecie ``config`` i zwraca jej wynik.
 
@@ -57,6 +58,7 @@ def run_game(
         n_gold=len(config.gold) if agent_knows_gold else None,
         n_arrows=world.arrows,
         risky=risky,
+        pits_proba=pits_proba,
     )
     t0 = time.perf_counter()
     percept = world.percept()  # percepcja na polu startowym

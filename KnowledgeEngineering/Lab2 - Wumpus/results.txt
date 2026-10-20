@@ -1,0 +1,15 @@
+# Without heuristics
+
+100 games on 8x8, pits 0.15, 2 wumpus(es), 1 gold
+  mean score        132.0
+  gold brought   15/100
+  deaths         0
+  mean actions       15.3
+  mean time [s]     0.042
+
+100 games on 8x8, pits 0.15, 2 wumpus(es), 1 gold (risky)
+  mean score       -243.1
+  gold brought   15/100
+  deaths         37
+  mean actions       20.0
+  mean time [s]     0.062

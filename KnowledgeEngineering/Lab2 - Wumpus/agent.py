@@ -89,6 +89,7 @@ class Agent:
         n_gold: int | None = 1,
         n_arrows: int | None = None,
         risky: bool = False,
+        pits_proba: float = 0.15,
     ) -> None:
         """Tworzy agenta stojącego na wejściu (1, 1) i patrzącego na wschód.
 
@@ -102,6 +103,7 @@ class Agent:
         self.n_gold = n_gold
         self.arrows = n_wumpus if n_arrows is None else n_arrows
         self.risky = risky
+        self.pits_proba = pits_proba
         self.kb = KnowledgeBase(width, height, n_wumpus)
         self.pos: Cell = START
         self.direction = Direction.E
@@ -215,7 +217,15 @@ class Agent:
             # Pomijamy pola, o których wiadomo, że zabijają.
             deadly = inf.pit_certain | inf.alive_certain
             candidates = inf.frontier - deadly
-            # TODO (RISKY)
+            print(f"{candidates=}")
+            danger_proba = self.kb.danger_probabilities(self.pits_proba)
+            danger_proba = filter(lambda : None, danger_proba)
+            print(f"{danger_proba=}")
+
+            route = plan_route(state, lambda c, d: c in candidates, visited | candidates)
+            if route is not None:
+                self.goal = f"explore {route_target(state, route)}"
+                return route
 
         return self._go_home("nothing safe left, leave the cave")
 
