@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import random
+import sys
 import time
 from dataclasses import dataclass
 
@@ -79,7 +80,7 @@ def run_game(
     return result
 
 
-def main() -> None:
+def main(argv) -> None:
     """Punkt wejścia z linii poleceń: parsuje argumenty, rozgrywa ``--games``
     gier i (dla więcej niż jednej gry) wypisuje zbiorcze statystyki."""
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -97,7 +98,7 @@ def main() -> None:
     ap.add_argument("--unknown-gold", action="store_true", help="agent does not know how much gold there is")
     ap.add_argument("--max-actions", type=int, default=1000)
     ap.add_argument("--quiet", action="store_true", help="only print the summary")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     # Jeden generator na wszystkie gry: przy ustalonym --seed seria gier jest powtarzalna.
     rng = random.Random(args.seed)
@@ -133,4 +134,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
