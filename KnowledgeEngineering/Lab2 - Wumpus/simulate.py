@@ -65,12 +65,7 @@ def run_game(
         print("Agent knowledge description:")
         print(agent.render_knowledge_description(), end="\n\n")
     while not world.done and world.actions_taken < max_actions:
-        goal_before = agent.goal
-        action = agent.act(percept)
-        # Przy zmianie celu pokazujemy, co agent aktualnie wie o świecie.
-        if verbose and agent.goal != goal_before:
-            print(f"--- goal: {agent.goal}")
-            print(agent.render_knowledge())
+        action = agent.act(percept, verbose=verbose)
         percept = world.execute(action)
         if verbose:
             flags = [k for k, v in vars(percept).items() if v]

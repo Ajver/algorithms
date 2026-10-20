@@ -130,13 +130,15 @@ class Agent:
 
     # --- działanie --------------------------------------------------------
 
-    def act(self, percept: Percept) -> Action:
+    def act(self, percept: Percept, verbose: bool = True) -> Action:
         """Główna pętla agenta: przyjmuje percepcję, zwraca następną akcję.
 
         Blask złota ma najwyższy priorytet (natychmiastowe GRAB).  W pozostałych
         przypadkach agent wykonuje kolejne akcje z planu, a gdy plan się
         skończy, wybiera nowy cel metodą :meth:`_decide`.
         """
+
+        goal_before = self.goal
         self._observe(percept)
         if percept.glitter:
             action = Action.GRAB
@@ -145,6 +147,9 @@ class Agent:
             if not self.plan:
                 self.plan = deque(self._decide())
             action = self.plan.popleft()
+        if verbose and self.goal != goal_before:
+            print(f"--- goal: {self.goal}")
+            print(self.render_knowledge())
         self._apply(action)
         return action
 
