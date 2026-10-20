@@ -122,10 +122,11 @@ def main(argv) -> None:
 
     if args.games > 1:
         n = len(results)
+        risky_print = "(risky)" if args.risky else ""
         if args.aima:
-            print(f"\n{n} games on the AIMA {width}x{height} world")
+            print(f"\n{n} games on the AIMA {width}x{height} world", risky_print)
         else:
-            print(f"\n{n} games on {width}x{height}, pits {args.pits}, {args.wumpus} wumpus(es), {args.gold} gold")
+            print(f"\n{n} games on {width}x{height}, pits {args.pits}, {args.wumpus} wumpus(es), {args.gold} gold", risky_print)
         print(f"  mean score     {sum(r.score for r in results) / n:8.1f}")
         print(f"  gold brought   {sum(r.gold for r in results if r.climbed)}/{n * args.gold}")
         print(f"  deaths         {sum(not r.alive for r in results)}")
