@@ -217,12 +217,18 @@ class Agent:
             # Pomijamy pola, o których wiadomo, że zabijają.
             deadly = inf.pit_certain | inf.alive_certain
             candidates = inf.frontier - deadly
-            print(f"{candidates=}")
+            # print(f"{candidates=}")
             danger_proba = self.kb.danger_probabilities(self.pits_proba)
-            danger_proba = filter(lambda : None, danger_proba)
-            print(f"{danger_proba=}")
-
-            route = plan_route(state, lambda c, d: c in candidates, visited | candidates)
+            danger_proba = dict(filter(lambda item: item[0] in candidates, danger_proba.items()))
+            # print(f"{danger_proba=}")
+            smallest_risk = 1.1
+            next_candidate = None
+            for cell, proba in danger_proba.items():
+                if proba < smallest_risk:
+                    smallest_risk = proba
+                    next_candidate = cell
+            # print(f"{next_candidate=}\n")
+            route = plan_route(state, lambda c, d: c == next_candidate, visited | {next_candidate})
             if route is not None:
                 self.goal = f"explore {route_target(state, route)}"
                 return route

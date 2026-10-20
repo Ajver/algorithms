@@ -13,3 +13,21 @@
   deaths         37
   mean actions       20.0
   mean time [s]     0.062
+
+
+# Choosing the smallest risk
+
+
+100 games on 8x8, pits 0.15, 2 wumpus(es), 1 gold
+  mean score        132.0
+  gold brought   15/100
+  deaths         0
+  mean actions       15.3
+  mean time [s]     0.059
+
+100 games on 8x8, pits 0.15, 2 wumpus(es), 1 gold (risky)
+  mean score       -154.7
+  gold brought   17/100
+  deaths         30
+  mean actions       20.7
+  mean time [s]     0.762
