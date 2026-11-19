@@ -103,9 +103,3 @@ def dfa(rr_intervals, scales=None, split_scale=16):
     alpha2 = calc_alpha(ns[ns > split_scale], F_total[ns > split_scale])
 
     return F_total, alpha1, alpha2, np.log10(ns), np.log10(F_total)
-
-
-if __name__ == "__main__":
-    RR_chf_raw = np.loadtxt("data/chf206.dat")
-    _, alpha1, alpha2, _, _ = dfa(RR_chf_raw)
-    print(f"chf206: {alpha1=:.4f} {alpha2=:.4f}")
