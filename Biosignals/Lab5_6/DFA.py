@@ -31,18 +31,21 @@ def F(n, RR_int, RR_t):
     RR_t   : czasy uderzeń (oś x dla dopasowania trendów)
     """
     N = int(np.floor(len(RR_int) / n) * n)
-    sub_RR_int = RR_int[:N]
-    ly_global = np.zeros_like(sub_RR_int)
-    for i in range(0, N, n):
-        x_offset = RR_t[i]
-        x, y = RR_t[i:i + n] - x_offset, sub_RR_int[i:i + n]
 
-        b = np.polyfit(x, y, 1)
-        ly = b[0]*x + b[1]
+    # Each row is one window of length n
+    x = RR_t[:N].reshape(-1, n)
+    y = RR_int[:N].reshape(-1, n)
 
-        ly_global[i:i + n] = ly
+    # Centering x and y in each window (this also serves as the offset)
+    x = x - x.mean(axis=1, keepdims=True)
+    y = y - y.mean(axis=1, keepdims=True)
 
-    err = np.mean((sub_RR_int - ly_global)**2)
+    # Least squares line for all windows at once:
+    # slope = sum(x*y) / sum(x^2), intercept = 0 after centering
+    slope = np.sum(x * y, axis=1, keepdims=True) / np.sum(x**2, axis=1, keepdims=True)
+    ly = slope * x
+
+    err = np.mean((y - ly)**2)
     F_n = np.sqrt(err)
     return F_n
 
